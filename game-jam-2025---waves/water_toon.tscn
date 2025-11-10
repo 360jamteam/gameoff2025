@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=14 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
+[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://cameraController.gd" id="2_0poqx"]
 [ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="4_0poqx"]
 
 [sub_resource type="Shader" id="Shader_aitcd"]
@@ -263,11 +264,12 @@ transform = Transform3D(1, 0, 0, 0, -0.945519, 0.325568, 0, -0.325568, -0.945519
 light_energy = 0.97
 shadow_enabled = true
 
-[node name="Camera" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.985551, 0.0131946, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, -7.56196, 16.483, -39.5556)
 fov = 37.8492
 near = 1.0
 far = 10000.0
+script = ExtResource("2_0poqx")
 
 [node name="Boat" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.67972, 0)

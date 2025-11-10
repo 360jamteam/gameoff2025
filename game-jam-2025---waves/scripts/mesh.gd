@@ -9,7 +9,7 @@ extends RigidBody3D
 #movement settings
 @export var moveSpeed := 20.0
 @export var boostMod := 3.0
-@export var turnSpeed := 0.05 
+@export var turnSpeed := 0.03
 
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
