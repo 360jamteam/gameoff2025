@@ -11,7 +11,6 @@ config_version=5
 [application]
 
 config/name="game jam 2025 - waves"
-run/main_scene="uid://djlg762jdm4m4"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
