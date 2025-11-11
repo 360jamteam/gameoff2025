@@ -1,7 +1,7 @@
-[gd_scene load_steps=21 format=4 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=21 format=4 uid="uid://c8q3ea6wesjpm"]
 
-[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
+[ext_resource type="Script" path="res://scripts/water.gd" id="1_k7utj"]
+[ext_resource type="Script" path="res://scripts/mesh.gd" id="1_nnm43"]
 [ext_resource type="Texture2D" uid="uid://c1cma07gjrqs5" path="res://assets/Duck_0.png" id="2_k7utj"]
 
 [sub_resource type="Shader" id="Shader_aitcd"]
