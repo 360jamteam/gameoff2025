@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://77tnpgrwcg6r"]
+
+[ext_resource type="Script" uid="uid://cilojb4svwgf4" path="res://Scripts/WavePulse.gd" id="1_nyhhk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nyhhk"]
+transparency = 1
+albedo_color = Color(0.494118, 0.811765, 1, 1)
+metallic = 0.2
+roughness = 0.35
+
+[sub_resource type="SphereMesh" id="SphereMesh_of5vq"]
+radial_segments = 32
+rings = 16
+
+[node name="WavePulse" type="Node3D"]
+script = ExtResource("1_nyhhk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+material_override = SubResource("StandardMaterial3D_nyhhk")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_of5vq")
