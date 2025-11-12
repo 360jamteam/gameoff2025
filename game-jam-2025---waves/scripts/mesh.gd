@@ -9,8 +9,9 @@ extends RigidBody3D
 #movement settings
 @export var moveSpeed := 20.0
 @export var boostMod := 3.0
-@export var turnSpeed := 0.03
+@export var turnSpeed := 0.003
 
+@export var jumpSpeed := 5.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water"
@@ -53,6 +54,9 @@ func _physics_process(delta):
 	if Input.is_action_pressed("boost"):
 		apply_central_force(transform.basis.z * moveSpeed * boostMod)
 		
+	if Input.is_action_pressed("jump"):
+		if submerged:
+			apply_central_impulse(Vector3.UP * jumpSpeed)
 		
 	#tricks
 	if Input.is_action_pressed("uarrow"):
@@ -63,6 +67,15 @@ func _physics_process(delta):
 		add_constant_torque(transform.basis.z * turnSpeed * boostMod)
 	if Input.is_action_pressed("larrow"):
 		add_constant_torque(-transform.basis.z * turnSpeed * boostMod)
+	
+	#if Input.is_action_pressed("uarrow"):
+		#apply_torque_impulse(transform.basis.x * turnSpeed * boostMod)
+	#if Input.is_action_pressed("darrow"):
+		#apply_torque_impulse(-transform.basis.x * turnSpeed * boostMod)
+	#if Input.is_action_pressed("rarrow"):
+		#apply_torque_impulse(transform.basis.z * turnSpeed * boostMod)
+	#if Input.is_action_pressed("larrow"):
+		#apply_torque_impulse(-transform.basis.z * turnSpeed * boostMod)
 
 		
 	submerged = false
@@ -89,4 +102,4 @@ func _physics_process(delta):
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
-		state.angular_velocity *= 1.0 - water_angular_drag
+		#state.angular_velocity *= 1.0 - water_angular_drag
