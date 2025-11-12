@@ -10,10 +10,13 @@ extends RigidBody3D
 @export var moveSpeed := 20.0
 @export var boostMod := 3.0
 @export var turnSpeed := 0.03
+#trick settings
+
 
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water"
+
 
 var water: MeshInstance3D
 var probes: Array[Node] = []
@@ -90,3 +93,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
+
+
+func crazyAssTricks():
+	var boat = get_node_or_null("../Boat")
+	
+	
