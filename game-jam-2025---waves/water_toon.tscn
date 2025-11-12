@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
-[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://cameraController.gd" id="2_0poqx"]
+[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="2_0poqx"]
 [ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="4_0poqx"]
 
 [sub_resource type="Shader" id="Shader_aitcd"]
