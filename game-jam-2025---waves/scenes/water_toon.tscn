@@ -1,10 +1,32 @@
-[gd_scene load_steps=22 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=24 format=3 uid="uid://djlg762jdm4m4"]
 
-[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
-[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://cameraController.gd" id="2_0poqx"]
-[ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="4_0poqx"]
-[ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="5_3bo0k"]
+[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
+[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
+[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="4_mste4"]
+[ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="5_ywv5c"]
+[ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
+noise_type = 3
+frequency = 0.0084
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7b4nq"]
+seamless = true
+noise = SubResource("FastNoiseLite_aitcd")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnm43"]
+sky_top_color = Color(0.306739, 0.627731, 0.942088, 1)
+sky_horizon_color = Color(0.606278, 0.875287, 0.994238, 1)
+sky_cover = SubResource("NoiseTexture2D_7b4nq")
+sky_cover_modulate = Color(0.728822, 0.728822, 0.728822, 1)
+
+[sub_resource type="Sky" id="Sky_nnm43"]
+sky_material = SubResource("ProceduralSkyMaterial_nnm43")
+
+[sub_resource type="Environment" id="Environment_0poqx"]
+background_mode = 2
+sky = SubResource("Sky_nnm43")
 
 [sub_resource type="Shader" id="Shader_aitcd"]
 code = "shader_type spatial;
@@ -227,28 +249,17 @@ size = Vector2(500, 500)
 subdivide_width = 20
 subdivide_depth = 20
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
-noise_type = 3
-frequency = 0.0084
+[sub_resource type="Curve3D" id="Curve3D_n74q2"]
+closed = true
+_data = {
+"points": PackedVector3Array(-30.628, 6, -32.815, 30.628, 6, 32.815, 88.6512, 18.5949, -127.294, -36.983, 6, -62.626, 36.983, 6, 62.626, 162.834, 6, -46.763, 40.277, 6, -60.061, -40.277, 6, 60.061, 159.18, 6, 108.555, 47.772, 6, 8.867, -47.772, 6, -8.867, 46.856, 6, 188.092, 61.779, 6, 28.633, -61.779, 6, -28.633, -77.997, 6, 108.985, 29.56, 6, 33.27, -29.56, 6, -33.27, -187.586, 6, 45.982, -29.513, 6, 40.112, 29.513, 6, -40.112, -176.498, 6, -114.633, -49.644, 6, 3.921, 49.644, 6, -3.921, -43.406, 6, -160.572),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 8
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7b4nq"]
-seamless = true
-noise = SubResource("FastNoiseLite_aitcd")
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnm43"]
-sky_top_color = Color(0.306739, 0.627731, 0.942088, 1)
-sky_horizon_color = Color(0.606278, 0.875287, 0.994238, 1)
-sky_cover = SubResource("NoiseTexture2D_7b4nq")
-sky_cover_modulate = Color(0.728822, 0.728822, 0.728822, 1)
-
-[sub_resource type="Sky" id="Sky_nnm43"]
-sky_material = SubResource("ProceduralSkyMaterial_nnm43")
-
-[sub_resource type="Environment" id="Environment_0poqx"]
-background_mode = 2
-sky = SubResource("Sky_nnm43")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_k7utj"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8gqqs"]
+radius = 3.0
+height = 9.0
 
 [sub_resource type="Gradient" id="Gradient_3bo0k"]
 offsets = PackedFloat32Array(0, 0.995763, 1)
@@ -278,7 +289,7 @@ transparency = 1
 blend_mode = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("5_3bo0k")
+albedo_texture = ExtResource("6_wyvur")
 billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
@@ -291,10 +302,6 @@ proximity_fade_distance = 2.0
 material = SubResource("StandardMaterial3D_n74q2")
 
 [node name="Node3D" type="Node3D"]
-
-[node name="Water" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_nnm43")
-script = ExtResource("1_k7utj")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0poqx")
@@ -309,14 +316,26 @@ transform = Transform3D(-0.985551, 0.0131946, -0.168867, -0.00616113, 0.993509, 
 fov = 37.8492
 near = 1.0
 far = 10000.0
-script = ExtResource("2_0poqx")
+script = ExtResource("1_8gqqs")
+
+[node name="Water" type="Node3D" parent="."]
+
+[node name="WaterMesh" type="MeshInstance3D" parent="Water"]
+mesh = SubResource("PlaneMesh_nnm43")
+skeleton = NodePath("../..")
+script = ExtResource("2_vcdfo")
+
+[node name="BuoyPath" type="Path3D" parent="Water"]
+curve = SubResource("Curve3D_n74q2")
+script = ExtResource("3_p1kvb")
 
 [node name="Boat" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.67972, 0)
-script = ExtResource("1_nnm43")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -199.866, 7.67972, -27.6363)
+inertia = Vector3(1, 1, 1)
+script = ExtResource("4_mste4")
 
 [node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
-mesh = ExtResource("4_0poqx")
+mesh = ExtResource("5_ywv5c")
 skeleton = NodePath("../..")
 
 [node name="ProbeContainer" type="Node3D" parent="Boat"]
@@ -334,7 +353,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.59894, 0.339564, -1.40779)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.60595, 0.307002, -1.3609)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boat"]
-shape = SubResource("BoxShape3D_k7utj")
+transform = Transform3D(1, 0, 0, 0, -0.062686, -0.998033, 0, 0.998033, -0.062686, 0, 2.32371, 0)
+shape = SubResource("CapsuleShape3D_8gqqs")
+debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Boat"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.502755, -3.4821)

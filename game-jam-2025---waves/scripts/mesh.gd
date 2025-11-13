@@ -14,7 +14,7 @@ extends RigidBody3D
 @export var jumpSpeed := 5.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-@onready var water_path : NodePath = "../Water"
+@onready var water_path : NodePath = "../Water/WaterMesh"
 
 var water: MeshInstance3D
 var probes: Array[Node] = []

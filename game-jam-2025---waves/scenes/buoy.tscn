@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://isux0wsyluq0"]
+
+[ext_resource type="Script" uid="uid://bjwq3pjhhcaxg" path="res://scripts/buoy.gd" id="1_hxl6b"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_hxl6b"]
+bounce = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ry4qp"]
+albedo_color = Color(0.937255, 0.27451, 0.12549, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_hxl6b"]
+material = SubResource("StandardMaterial3D_ry4qp")
+radius = 1.5
+height = 3.0
+
+[node name="StaticBody3D" type="StaticBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_hxl6b")
+script = ExtResource("1_hxl6b")
+
+[node name="BuoyMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_hxl6b")
+skeleton = NodePath("../../..")
