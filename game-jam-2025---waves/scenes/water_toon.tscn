@@ -4,7 +4,7 @@
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="4_mste4"]
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 
