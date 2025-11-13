@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://c8q3ea6wesjpm"]
 
-[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
+[ext_resource type="Script" path="res://scripts/water.gd" id="1_k7utj"]
+[ext_resource type="Script" uid="uid://cfma8e6stqmd2" path="res://scripts/mesh.gd" id="1_nnm43"]
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://cameraController.gd" id="2_0poqx"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="4_0poqx"]
 [ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://row_wave_spawner.tscn" id="5_as4el"]
