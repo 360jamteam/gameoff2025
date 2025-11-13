@@ -302,3 +302,5 @@ shape = SubResource("BoxShape3D_k7utj")
 bump_scene = ExtResource("6_n74q2")
 boat = NodePath("../Boat")
 water = NodePath("../Water")
+
+[editable path="WaveSpawner"]
