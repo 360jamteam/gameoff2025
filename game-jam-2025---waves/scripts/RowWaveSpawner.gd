@@ -49,16 +49,18 @@ func _spawn_row() -> void:
 
 	# Determine the boat's forward direction (used to push waves toward the boat)
 	var basis := boat_node.global_transform.basis
-	var fwd: Vector3 = -basis.z.normalized()
-	var right: Vector3 = basis.x.normalized()
+	var boat_forward: Vector3 = basis.z.normalized()
+	var right: Vector3 = basis.x
 
 	# Match the bumps to the water height
 	var y := water_node.global_transform.origin.y
 
 	# Starting point of the whole row
-	var center := boat_node.global_transform.origin + fwd * ahead_dist
+	var center := boat_node.global_transform.origin + boat_forward * ahead_dist
 	center.y = y + 0.02   # Slightly above water so bumps don’t clip
 
+	var fwd: Vector3 = boat_forward
+	
 	# Spread bumps left/right around the center
 	var half := (bumps_per_row - 1) * 0.5
 
