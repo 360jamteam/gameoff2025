@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=4 uid="uid://c8q3ea6wesjpm"]
+[gd_scene load_steps=24 format=4 uid="uid://c8q3ea6wesjpm"]
 
-[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="1_k7utj"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/mesh.gd" id="1_nnm43"]
+[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://Scripts/water.gd" id="1_k7utj"]
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://Scripts/mesh.gd" id="1_nnm43"]
 [ext_resource type="Texture2D" uid="uid://c1cma07gjrqs5" path="res://assets/Duck_0.png" id="2_k7utj"]
-[ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://wave_spawner.tscn" id="4_0poqx"]
 [ext_resource type="ArrayMesh" uid="uid://n6x3l2jd3m6e" path="res://assets/ship-small.obj" id="5_3bo0k"]
+[ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://row_wave_spawner.tscn" id="5_as4el"]
+[ext_resource type="PackedScene" uid="uid://77tnpgrwcg6r" path="res://wave_bump.tscn" id="6_as4el"]
 
 [sub_resource type="Shader" id="Shader_aitcd"]
 code = "shader_type spatial;
@@ -357,19 +358,11 @@ transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 12.692, 0, 13.044)
 mesh = SubResource("SphereMesh_k7utj")
 
 [node name="Boat" type="MeshInstance3D" parent="Float"]
-transform = Transform3D(-0.810901, 0, 0.585184, 0, 1, 0, -0.585184, 0, -0.810901, -15.5481, -0.143623, -10.246)
+transform = Transform3D(0.836019, 0, -0.548702, 0, 1, 0, 0.548702, 0, 0.836019, -15.0418, -0.143623, -9.64209)
 mesh = ExtResource("5_3bo0k")
 skeleton = NodePath("../..")
 
-[node name="WaveSpawner" parent="." instance=ExtResource("4_0poqx")]
+[node name="WaveSpawner" parent="." instance=ExtResource("5_as4el")]
+bump_scene = ExtResource("6_as4el")
 boat = NodePath("../Float/Boat")
-water_node = NodePath("../Water")
-row_interval = 2.0
-pool_size = 20
-pulses_per_row = 7
-small_wave_scale = 2.0
-scatter_mode = true
-area_x = 50.0
-area_z = 50.0
-waves_per_second = 5.0
-random_scale_range = Vector2(1.5, 2.5)
+water = NodePath("../Water")

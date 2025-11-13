@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://bet5mpv4rsivg"]
-
-[ext_resource type="Script" uid="uid://gvb5r63rsvtp" path="res://Scripts/WaveSpawner.gd" id="1_ryks6"]
-[ext_resource type="PackedScene" uid="uid://77tnpgrwcg6r" path="res://wave_pulse.tscn" id="2_nhbnn"]
-
-[node name="WaveSpawner" type="Node3D"]
-script = ExtResource("1_ryks6")
-wave_scene = ExtResource("2_nhbnn")
