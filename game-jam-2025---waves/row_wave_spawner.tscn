@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bet5mpv4rsivg"]
+
+[ext_resource type="Script" uid="uid://gvb5r63rsvtp" path="res://Scripts/RowWaveSpawner.gd" id="1_ryks6"]
+
+[node name="WaveSpawner" type="Node3D"]
+script = ExtResource("1_ryks6")
