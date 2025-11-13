@@ -250,7 +250,6 @@ sky_material = SubResource("ProceduralSkyMaterial_nnm43")
 background_mode = 2
 sky = SubResource("Sky_nnm43")
 
-<<<<<<< HEAD
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gd11y"]
 resource_name = "blinn3-fx"
 albedo_texture = ExtResource("2_k7utj")
@@ -309,17 +308,12 @@ albedo_color = Color(0.929412, 0.266667, 0.266667, 1)
 material = SubResource("StandardMaterial3D_7b4nq")
 
 [sub_resource type="SphereMesh" id="SphereMesh_k7utj"]
-=======
 [sub_resource type="BoxShape3D" id="BoxShape3D_k7utj"]
->>>>>>> origin/main
 
 [node name="Node3D" type="Node3D"]
 
 [node name="Water" type="MeshInstance3D" parent="."]
-<<<<<<< HEAD
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-=======
->>>>>>> origin/main
 mesh = SubResource("PlaneMesh_nnm43")
 script = ExtResource("1_k7utj")
 
