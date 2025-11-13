@@ -250,6 +250,7 @@ sky_material = SubResource("ProceduralSkyMaterial_nnm43")
 background_mode = 2
 sky = SubResource("Sky_nnm43")
 
+<<<<<<< HEAD
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gd11y"]
 resource_name = "blinn3-fx"
 albedo_texture = ExtResource("2_k7utj")
@@ -308,11 +309,17 @@ albedo_color = Color(0.929412, 0.266667, 0.266667, 1)
 material = SubResource("StandardMaterial3D_7b4nq")
 
 [sub_resource type="SphereMesh" id="SphereMesh_k7utj"]
+=======
+[sub_resource type="BoxShape3D" id="BoxShape3D_k7utj"]
+>>>>>>> origin/main
 
 [node name="Node3D" type="Node3D"]
 
 [node name="Water" type="MeshInstance3D" parent="."]
+<<<<<<< HEAD
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+=======
+>>>>>>> origin/main
 mesh = SubResource("PlaneMesh_nnm43")
 script = ExtResource("1_k7utj")
 
@@ -324,11 +331,16 @@ transform = Transform3D(1, 0, 0, 0, -0.945519, 0.325568, 0, -0.325568, -0.945519
 light_energy = 0.97
 shadow_enabled = true
 
+<<<<<<< HEAD
 [node name="Camera" type="Camera3D" parent="."]
+=======
+[node name="Camera3D" type="Camera3D" parent="."]
+>>>>>>> origin/main
 transform = Transform3D(-0.985551, 0.0131946, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, -7.56196, 16.483, -39.5556)
 fov = 37.8492
 near = 1.0
 far = 10000.0
+<<<<<<< HEAD
 
 [node name="Float" type="RigidBody3D" parent="."]
 script = ExtResource("1_nnm43")
@@ -366,3 +378,31 @@ skeleton = NodePath("../..")
 bump_scene = ExtResource("6_as4el")
 boat = NodePath("../Float/Boat")
 water = NodePath("../Water")
+=======
+script = ExtResource("2_0poqx")
+
+[node name="Boat" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.67972, 0)
+script = ExtResource("1_nnm43")
+
+[node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
+mesh = ExtResource("4_0poqx")
+skeleton = NodePath("../..")
+
+[node name="ProbeContainer" type="Node3D" parent="Boat"]
+
+[node name="Marker3D" type="Marker3D" parent="Boat/ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0255332, 0.586806, 2.92499)
+
+[node name="Marker3D2" type="Marker3D" parent="Boat/ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0510664, 0.361696, -3.58853)
+
+[node name="Marker3D3" type="Marker3D" parent="Boat/ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.59894, 0.339564, -1.40779)
+
+[node name="Marker3D4" type="Marker3D" parent="Boat/ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.60595, 0.307002, -1.3609)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boat"]
+shape = SubResource("BoxShape3D_k7utj")
+>>>>>>> origin/main
