@@ -6,6 +6,12 @@ extends RigidBody3D
 @export var water_angular_drag := 0.05
 @export var use_probes := false
 
+#movement settings
+@export var moveSpeed := 20.0
+@export var boostMod := 3.0
+@export var turnSpeed := 0.03
+
+
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water"
 
@@ -32,6 +38,33 @@ func _ready():
 	pass
 
 func _physics_process(delta):
+	
+	#movement options:
+	if Input.is_action_pressed("forward"):
+		apply_central_force(transform.basis.z * moveSpeed)
+	if Input.is_action_pressed("backward"):
+		apply_central_force(-transform.basis.z * moveSpeed)
+
+	if Input.is_action_pressed("left"):
+		apply_torque_impulse(transform.basis.y * turnSpeed)
+	if Input.is_action_pressed("right"):
+		apply_torque_impulse(transform.basis.y * -turnSpeed)
+		
+	if Input.is_action_pressed("boost"):
+		apply_central_force(transform.basis.z * moveSpeed * boostMod)
+		
+		
+	#tricks
+	if Input.is_action_pressed("uarrow"):
+		add_constant_torque(transform.basis.x * turnSpeed * boostMod)
+	if Input.is_action_pressed("darrow"):
+		add_constant_torque(-transform.basis.x * turnSpeed * boostMod)
+	if Input.is_action_pressed("rarrow"):
+		add_constant_torque(transform.basis.z * turnSpeed * boostMod)
+	if Input.is_action_pressed("larrow"):
+		add_constant_torque(-transform.basis.z * turnSpeed * boostMod)
+
+		
 	submerged = false
 	
 	if use_probes and probes.size() > 0:
