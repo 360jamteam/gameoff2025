@@ -10,7 +10,7 @@ extends RigidBody3D
 #movement settings
 @export var moveSpeed := 100.0
 @export var boostMod := 3.0
-@export var turnSpeed := 0.03
+@export var turnSpeed := 0.1
 @export var recoverSpeed := 2.0  
 
 #trick settings
@@ -26,7 +26,6 @@ var trickAngles = [180, 360, 720, 1080]
 
 
 var water: MeshInstance3D
-var probes: Array[Node] = []
 var submerged := false
 
 func _ready():
@@ -38,6 +37,10 @@ func _ready():
 	pass
 
 func _physics_process(delta):
+	
+	#when not doing tricks, 
+	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
+		recoverBoat(delta)
 	
 	#movement options:
 	if Input.is_action_pressed("forward"):
@@ -67,9 +70,6 @@ func _physics_process(delta):
 	if Input.is_action_pressed("larrow"):
 		apply_torque_impulse(transform.basis.z * turnSpeed)
 		
-	#when not doing tricks, 
-	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
-		recoverBoat(delta)
 
 	submerged = false
 	var body_height = global_transform.origin.y
@@ -85,17 +85,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
 
-func recoverBoat(delta):
-	var boat = get_node("../Boat")
-	#get boats cureent basis
-	var curBasis = boat.transform.basis
-	#get current y rotation of boat
-	var curRotationY = curBasis.get_euler().y
-	#create target basis where boat upright, but still facing correct direction
-	var targetBasis = Basis(Vector3.UP, curRotationY)
-	#interpolate from current to upright
-	boat.transform.basis = curBasis.slerp(targetBasis, recoverSpeed * delta)
-
+func recoverBoat(_delta):
+	# get up direction for boat
+	var current_up = global_transform.basis.y
+	# calc how much to rotate boat to get to actual up
+	var correction_axis = current_up.cross(Vector3.UP)
+	# apply recovery torque
+	apply_torque(correction_axis * recoverSpeed * 30.0)
+	# reduce angular and linear velocity to help it settle faster
+	angular_velocity *= 0.9
+	linear_velocity *= 0.9
+	
 
 
 func crazyAssTricks():

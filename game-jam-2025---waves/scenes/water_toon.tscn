@@ -109,7 +109,7 @@ light_energy = 0.97
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.985551, 0.0131946, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, -7.56196, 16.483, -39.5556)
+transform = Transform3D(-0.985551, 0.0131947, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, 685.207, 16.483, -3641.88)
 near = 1.0
 far = 10000.0
 script = ExtResource("1_8gqqs")
