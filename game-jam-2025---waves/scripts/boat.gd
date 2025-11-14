@@ -69,7 +69,9 @@ func _physics_process(delta):
 		apply_torque_impulse(transform.basis.z * -turnSpeed)
 	if Input.is_action_pressed("larrow"):
 		apply_torque_impulse(transform.basis.z * turnSpeed)
-		
+	if Input.is_action_pressed("spin"):
+		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
+
 
 	submerged = false
 	var body_height = global_transform.origin.y
