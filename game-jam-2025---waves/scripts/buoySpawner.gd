@@ -7,6 +7,10 @@ extends Path3D
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 
+@export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
+@export var squid_spacing: float = 120.0     # distance between squids
+
+
 var water: MeshInstance3D
 
 func _ready():
@@ -18,9 +22,10 @@ func _ready():
 	if not curve.sample_baked(0.0):
 		push_error("Uh uh, no points in Curve3D")
 		return
-	
 	spawn_buoys()
 	create_invisible_walls()
+	spawn_squids()
+var boat := get_node_or_null("../Boat")
 
 func spawn_buoys():
 	var curve_length = curve.get_baked_length()
@@ -136,3 +141,50 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	# create collision shape from mesh
 	var concave_shape = array_mesh.create_trimesh_shape()
 	collision_shape.shape = concave_shape
+
+func spawn_squids() -> void:
+	if squid_scene == null:
+		push_warning("Squid scene not assigned, skipping squids")
+		return
+
+	var curve_length = curve.get_baked_length()
+	if curve_length <= 0.0:
+		push_warning("Curve length is zero, no squids spawned")
+		return
+
+	var half_width: float = track_width * 0.5
+	var num_squids: int = int(curve_length / squid_spacing)
+
+	for i in range(num_squids):
+		var dist: float = float(i) * squid_spacing
+		if dist > curve_length:
+			break
+
+		var p0: Vector3 = curve.sample_baked(dist)
+
+		var dist_next: float = min(dist + 1.0, curve_length)
+		var p1: Vector3 = curve.sample_baked(dist_next)
+		var forward: Vector3 = (p1 - p0).normalized()
+		if forward == Vector3.ZERO:
+			forward = Vector3.FORWARD
+
+		# sideways (between walls) direction
+		var right: Vector3 = forward.cross(Vector3.UP).normalized()
+		if right == Vector3.ZERO:
+			right = Vector3.RIGHT
+
+		# convert center point to world so we can get water height
+		var world_center: Vector3 = to_global(p0)
+		var water_height: float = water.get_height(world_center)
+		world_center.y = water_height   # sit on water
+
+		var squid: Node3D = squid_scene.instantiate()
+		add_child(squid)
+
+		squid.global_position = world_center
+		squid.rotation_degrees.y = 180
+		
+		if squid.has_method("setup"):
+			squid.setup(world_center, right, half_width)
+
+		print("Spawned squid at: ", world_center)

@@ -23,7 +23,7 @@ var trickAngles = [180, 360, 720, 1080]
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water/WaterMesh"
-
+@onready var boat: RigidBody3D = get_node("../Boat") as RigidBody3D
 
 var water: MeshInstance3D
 var probes: Array[Node] = []
@@ -31,6 +31,7 @@ var submerged := false
 
 func _ready():
 	water = get_node(water_path)
+	
 	
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
@@ -42,6 +43,8 @@ func _physics_process(delta):
 	#movement options:
 	if Input.is_action_pressed("forward"):
 		apply_central_force(transform.basis.z * moveSpeed)
+		print("Boat position: ", global_position)
+		
 	if Input.is_action_pressed("backward"):
 		apply_central_force(-transform.basis.z * moveSpeed)
 

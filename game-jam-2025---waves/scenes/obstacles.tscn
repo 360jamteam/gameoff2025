@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://bexah01ookd2g"]
+
+[ext_resource type="Script" uid="uid://dbpmyggv312yl" path="res://obstacles.gd" id="1_rw70g"]
+[ext_resource type="ArrayMesh" uid="uid://bxfk1jqwkmsw6" path="res://assets/squid.obj" id="2_2fc1n"]
+[ext_resource type="Texture2D" uid="uid://dhfjqjii7mgh7" path="res://assets/squid.png" id="3_jei10"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6tpbi"]
+albedo_color = Color(1, 0.843137, 1, 1)
+albedo_texture = ExtResource("3_jei10")
+
+[node name="Obstacles" type="Node3D"]
+script = ExtResource("1_rw70g")
+
+[node name="Squid" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.634796, 7.27755, 0)
+mesh = ExtResource("2_2fc1n")
+surface_material_override/0 = SubResource("StandardMaterial3D_6tpbi")
+
+[node name="squid" type="Area3D" parent="Squid"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Squid/squid"]

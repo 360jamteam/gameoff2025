@@ -33,7 +33,6 @@ func _ready():
 func _process(delta):
 	# keep this in sync w shader
 	time += delta
-	
 	# keep only active waves
 	spawned_waves = spawned_waves.filter(
 		func(w):
