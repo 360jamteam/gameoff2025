@@ -4,8 +4,8 @@
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
-[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
-[ext_resource type="ArrayMesh" uid="uid://cylykmuk2v4uo" path="res://assets/ship-small.obj" id="5_ywv5c"]
+[ext_resource type="Script" uid="uid://cfma8e6stqmd2" path="res://scripts/boat.gd" id="4_mste4"]
+[ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
@@ -40,6 +40,12 @@ shader_parameter/tile = Vector2(100, 100)
 shader_parameter/height = 3.0
 shader_parameter/wave_size = Vector2(4, 4)
 shader_parameter/wave_speed = 4.5
+shader_parameter/spawned_wave_count = 0
+shader_parameter/spawned_wave_centers = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/spawned_wave_times = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/spawned_wave_radius = 0.0
+shader_parameter/spawned_wave_height = 0.0
+shader_parameter/spawned_wave_lifetime = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nnm43"]
 material = SubResource("ShaderMaterial_7b4nq")
