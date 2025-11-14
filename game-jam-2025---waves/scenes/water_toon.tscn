@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=26 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
@@ -7,7 +7,8 @@
 [ext_resource type="Script" uid="uid://cfma8e6stqmd2" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
-[ext_resource type="PackedScene" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
+[ext_resource type="PackedScene" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
+[ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -127,6 +128,9 @@ script = ExtResource("1_8gqqs")
 mesh = SubResource("PlaneMesh_nnm43")
 skeleton = NodePath("../..")
 script = ExtResource("2_vcdfo")
+spawned_wave_radius = 2.5
+spawned_wave_height = 0.3
+spawned_wave_lifetime = 1.5
 
 [node name="BuoyPath" type="Path3D" parent="Water"]
 curve = SubResource("Curve3D_n74q2")
@@ -156,5 +160,10 @@ trail_enabled = true
 trail_lifetime = 1.78
 process_material = SubResource("ParticleProcessMaterial_as4el")
 draw_pass_1 = SubResource("QuadMesh_k80b6")
+
+[node name="WaveSpawner" parent="Boat" instance=ExtResource("8_mste4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -514.228, -7.68, 3098.46)
+boat = NodePath("..")
+water = NodePath("../../Water/WaterMesh")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
