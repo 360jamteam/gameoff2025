@@ -3,12 +3,12 @@
 
 extends RigidBody3D
 
-@export var float_force := 1.5
+@export var float_force := 11.5
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
 
 #movement settings
-@export var moveSpeed := 100.0
+@export var moveSpeed := 500.0
 @export var boostMod := 3.0
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 2.0  
@@ -18,8 +18,7 @@ var totalScore = 0.0
 var touchingWater = true
 var trickAngles = [180, 360, 720, 1080]
 
-
-@export var jumpSpeed := 5.0
+@export var jumpSpeed := 70.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water/WaterMesh"
@@ -43,21 +42,22 @@ func _physics_process(delta):
 		recoverBoat(delta)
 	
 	#movement options:
-	if Input.is_action_pressed("forward"):
-		apply_central_force(transform.basis.z * moveSpeed)
-	if Input.is_action_pressed("backward"):
-		apply_central_force(-transform.basis.z * moveSpeed)
+	if submerged:
+		if Input.is_action_pressed("forward"):
+			apply_central_force(transform.basis.z * moveSpeed)
+		if Input.is_action_pressed("backward"):
+			apply_central_force(-transform.basis.z * moveSpeed)
 
-	if Input.is_action_pressed("left"):
-		apply_torque_impulse(transform.basis.y * turnSpeed)
-	if Input.is_action_pressed("right"):
-		apply_torque_impulse(transform.basis.y * -turnSpeed)
-		
-	if Input.is_action_pressed("boost"):
-		apply_central_force(transform.basis.z * moveSpeed * boostMod)
-		
-	if Input.is_action_pressed("jump"):
-		if submerged:
+		if Input.is_action_pressed("left"):
+			apply_torque_impulse(transform.basis.y * turnSpeed)
+		if Input.is_action_pressed("right"):
+			apply_torque_impulse(transform.basis.y * -turnSpeed)
+			
+		if Input.is_action_pressed("boost"):
+			apply_central_force(transform.basis.z * moveSpeed * boostMod)
+			
+		if Input.is_action_pressed("jump"):
+			#if submerged:
 			apply_central_impulse(Vector3.UP * jumpSpeed)
 		
 	#tricks
@@ -94,11 +94,6 @@ func recoverBoat(_delta):
 	var correction_axis = current_up.cross(Vector3.UP)
 	# apply recovery torque
 	apply_torque(correction_axis * recoverSpeed * 30.0)
-	# reduce angular and linear velocity to help it settle faster
-	angular_velocity *= 0.9
-	linear_velocity *= 0.9
-	
-
 
 func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
