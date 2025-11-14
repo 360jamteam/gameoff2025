@@ -18,9 +18,9 @@ const MAX_SPAWNED_WAVES := 32   # how many we send to the shader
 # List of waves that are spawned. Each one stores where it happened and when.
 var spawned_waves: Array = []  # each = { center = Vector2, time = float }
 
-@export var spawned_wave_radius: float = 4.0        # how wide each bump is
-@export var spawned_wave_height: float = 0.7        # how strong the bump is
-@export var spawned_wave_lifetime: float = 3.0      # how long it lives (seconds)
+@export var spawned_wave_radius: float = 5.0        # how wide each bump is
+@export var spawned_wave_height: float = 0.9        # how strong the bump is
+@export var spawned_wave_lifetime: float = 5.0      # how long it lives (seconds)
 
 
 func _ready():
@@ -31,37 +31,41 @@ func _ready():
 
 
 func _process(delta):
-	# keep this in sync w shader
+	# keep this in sync with shader
 	time += delta
-	# keep only active waves
+
+	# keep only active waves (Dictionary access with ["time"])
 	spawned_waves = spawned_waves.filter(
 		func(w):
-			return time - w.time <= spawned_wave_lifetime
+			return time - float(w["time"]) <= spawned_wave_lifetime
 	)
 
-	# send spawned waves to the shader so it can move the mesh visually
-	if material:
-		var count: int = min(spawned_waves.size(), MAX_SPAWNED_WAVES)
+	if material == null:
+		return
 
-		var centers: PackedVector2Array = PackedVector2Array()
-		var times: PackedFloat32Array = PackedFloat32Array()
+	var count: int = min(spawned_waves.size(), MAX_SPAWNED_WAVES)
 
-		for i in range(count):
-			var w = spawned_waves[i]
-			centers.append(w.center)
-			times.append(w.time)
+	var centers := PackedVector2Array()
+	var times := PackedFloat32Array()
 
-		# pad arrays so the shader always has a full set
-		while centers.size() < MAX_SPAWNED_WAVES:
-			centers.append(Vector2.ZERO)
-			times.append(-9999.0)
+	for i in range(count):
+		var w: Dictionary = spawned_waves[i]
+		centers.append(w["center"])
+		times.append(w["time"])
 
-		material.set_shader_parameter("spawned_wave_count", count)
-		material.set_shader_parameter("spawned_wave_centers", centers)
-		material.set_shader_parameter("spawned_wave_times", times)
-		material.set_shader_parameter("spawned_wave_radius", spawned_wave_radius)
-		material.set_shader_parameter("spawned_wave_height", spawned_wave_height)
-		material.set_shader_parameter("spawned_wave_lifetime", spawned_wave_lifetime)
+	# pad arrays so the shader always has a full set
+	while centers.size() < MAX_SPAWNED_WAVES:
+		centers.append(Vector2.ZERO)
+		times.append(-9999.0)
+
+	# send everything to the shader
+	material.set_shader_parameter("water_time", time)
+	material.set_shader_parameter("spawned_wave_count", count)
+	material.set_shader_parameter("spawned_wave_centers", centers)
+	material.set_shader_parameter("spawned_wave_times", times)
+	material.set_shader_parameter("spawned_wave_radius", spawned_wave_radius)
+	material.set_shader_parameter("spawned_wave_height", spawned_wave_height)
+	material.set_shader_parameter("spawned_wave_lifetime", spawned_wave_lifetime)
 
 
 # called by RowWaveSpawner instead of spawning a 3D bump

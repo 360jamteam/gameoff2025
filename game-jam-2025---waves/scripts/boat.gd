@@ -3,7 +3,7 @@
 
 extends RigidBody3D
 
-@export var float_force := 1.5
+@export var float_force := 1.4
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
 
@@ -18,7 +18,6 @@ var totalScore = 0.0
 var touchingWater = true
 var trickAngles = [180, 360, 720, 1080]
 
-
 @export var jumpSpeed := 5.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -31,15 +30,13 @@ var submerged := false
 
 func _ready():
 	water = get_node(water_path)
-	
-	
+
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
 		return
 	pass
 
 func _physics_process(delta):
-	
 	#movement options:
 	if Input.is_action_pressed("forward"):
 		apply_central_force(transform.basis.z * moveSpeed)
@@ -99,8 +96,6 @@ func recoverBoat(delta):
 	#interpolate from current to upright
 	boat.transform.basis = curBasis.slerp(targetBasis, recoverSpeed * delta)
 
-
-
 func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
 	if touchingWater == false:
@@ -110,5 +105,3 @@ func crazyAssTricks():
 	#set flags when angle passses x amount
 	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
 	#then add to total score
-	
-	

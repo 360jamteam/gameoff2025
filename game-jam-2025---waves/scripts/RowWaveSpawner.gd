@@ -6,9 +6,9 @@ extends Node3D
 @export var boat: NodePath                 # Reference to the boat
 @export var water: NodePath                # Water node that handles wave height
 
-@export var row_interval: float = 2.0      # Time between each row of waves
-@export var bumps_per_row: int = 11        # How many wave bumps appear across the row
-@export var spacing: float = 1.0           # Distance between each bump in the row
+@export var row_interval: float = 3.0      # Time between each row of waves
+@export var bumps_per_row: int = 8.0       # How many wave bumps appear across the row
+@export var spacing: float = 2.0           # Distance between each bump in the row
 @export var ahead_dist: float = 8.0        # How far in front of the boat the row should spawn
 @export var start_delay: float = 3.0       # How long to wait before waves start
 
@@ -64,6 +64,8 @@ func _process(delta: float) -> void:
 func _spawn_row() -> void:
 	if _boat_ref == null or _water_ref == null:
 		return
+		
+	print("WaveSpawner: spawning a row of waves")  # DEBUG
 
 	var basis := _boat_ref.global_transform.basis
 	var boat_forward: Vector3 = basis.z.normalized()

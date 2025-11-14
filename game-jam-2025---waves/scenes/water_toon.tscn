@@ -38,16 +38,17 @@ shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
 shader_parameter/WATER2_COL = Vector4(0.04, 0.35, 0.78, 1)
 shader_parameter/FOAM_COL = Vector4(0.8125, 0.9609, 0.9648, 1)
 shader_parameter/distortion_speed = 2.0
-shader_parameter/tile = Vector2(100, 100)
-shader_parameter/height = 3.0
-shader_parameter/wave_size = Vector2(4, 4)
+shader_parameter/tile = Vector2(50, 50)
+shader_parameter/height = 2.0
+shader_parameter/wave_size = Vector2(2, 2)
 shader_parameter/wave_speed = 4.5
 shader_parameter/spawned_wave_count = 0
 shader_parameter/spawned_wave_centers = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/spawned_wave_times = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-shader_parameter/spawned_wave_radius = 0.0
-shader_parameter/spawned_wave_height = 0.0
-shader_parameter/spawned_wave_lifetime = 0.0
+shader_parameter/spawned_wave_radius = 10.0
+shader_parameter/spawned_wave_height = 5.0
+shader_parameter/spawned_wave_lifetime = 5.0
+shader_parameter/water_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nnm43"]
 material = SubResource("ShaderMaterial_7b4nq")
@@ -128,9 +129,8 @@ script = ExtResource("1_8gqqs")
 mesh = SubResource("PlaneMesh_nnm43")
 skeleton = NodePath("../..")
 script = ExtResource("2_vcdfo")
-spawned_wave_radius = 2.5
-spawned_wave_height = 0.3
-spawned_wave_lifetime = 1.5
+spawned_wave_radius = 10.0
+spawned_wave_height = 5.0
 
 [node name="BuoyPath" type="Path3D" parent="Water"]
 curve = SubResource("Curve3D_n74q2")
@@ -167,3 +167,4 @@ boat = NodePath("..")
 water = NodePath("../../Water/WaterMesh")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
+visible = false
