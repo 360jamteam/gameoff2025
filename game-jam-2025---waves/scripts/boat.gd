@@ -8,10 +8,10 @@ extends RigidBody3D
 @export var water_angular_drag := 0.05
 
 #movement settings
-@export var moveSpeed := 500.0
-@export var boostMod := 3.0
+@export var moveSpeed := 1700.0
+@export var boostMod := 2.0
 @export var turnSpeed := 0.1
-@export var recoverSpeed := 2.0  
+@export var recoverSpeed := 1200.0  
 
 #trick settings
 var totalScore = 0.0
@@ -34,24 +34,33 @@ func _ready():
 		push_error("Water node not found at path: " + str(water_path))
 		return
 	pass
-
-func _physics_process(delta):
+	
+func _integrate_forces(state: PhysicsDirectBodyState3D):
+	if submerged:
+		state.linear_velocity *= 1.0 - water_drag
+		state.angular_velocity *= 1.0 - water_angular_drag
 	
 	#when not doing tricks, 
 	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
-		recoverBoat(delta)
-	
+		recoverBoat()
+		
+	handleControls()
+	makeItFloat()
+
+func handleControls():
 	#movement options:
+	if Input.is_action_pressed("left"):
+		apply_torque_impulse(transform.basis.y * turnSpeed)
+	if Input.is_action_pressed("right"):
+		apply_torque_impulse(transform.basis.y * -turnSpeed)
+	
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
 		if Input.is_action_pressed("backward"):
 			apply_central_force(-transform.basis.z * moveSpeed)
 
-		if Input.is_action_pressed("left"):
-			apply_torque_impulse(transform.basis.y * turnSpeed)
-		if Input.is_action_pressed("right"):
-			apply_torque_impulse(transform.basis.y * -turnSpeed)
+
 			
 		if Input.is_action_pressed("boost"):
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
@@ -72,7 +81,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
-
+func makeItFloat():
 	submerged = false
 	var body_height = global_transform.origin.y
 	var water_height = water.get_height(global_transform.origin)
@@ -81,19 +90,14 @@ func _physics_process(delta):
 	if depth > 0:
 		submerged = true
 		apply_force(Vector3.UP * float_force * gravity * depth)
-
-func _integrate_forces(state: PhysicsDirectBodyState3D):
-	if submerged:
-		state.linear_velocity *= 1.0 - water_drag
-		state.angular_velocity *= 1.0 - water_angular_drag
-
-func recoverBoat(_delta):
+	
+func recoverBoat():
 	# get up direction for boat
 	var current_up = global_transform.basis.y
 	# calc how much to rotate boat to get to actual up
 	var correction_axis = current_up.cross(Vector3.UP)
 	# apply recovery torque
-	apply_torque(correction_axis * recoverSpeed * 30.0)
+	apply_torque(correction_axis * recoverSpeed)
 
 func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
