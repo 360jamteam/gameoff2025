@@ -139,7 +139,12 @@ script = ExtResource("3_p1kvb")
 [node name="Boat" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 514.228, 7.68, -3098.46)
 inertia = Vector3(1, 1, 1)
+linear_damp = 0.2
+angular_damp = 2.0
 script = ExtResource("4_mste4")
+water_angular_drag = 0.2
+turnSpeed = 0.02
+recoverSpeed = 5.0
 
 [node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
@@ -167,4 +172,3 @@ boat = NodePath("..")
 water = NodePath("../../Water/WaterMesh")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
-visible = false
