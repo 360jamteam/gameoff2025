@@ -55,8 +55,8 @@ _data = {
 point_count = 25
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8gqqs"]
-radius = 3.0
-height = 9.0
+radius = 3.5
+height = 7.0
 
 [sub_resource type="Gradient" id="Gradient_3bo0k"]
 offsets = PackedFloat32Array(0, 0.995763, 1)
@@ -129,15 +129,17 @@ script = ExtResource("3_p1kvb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 514.228, 7.68, -3098.46)
 mass = 10.0
 inertia = Vector3(1, 1, 1)
+linear_damp = 0.02
+angular_damp = 2.0
 script = ExtResource("4_mste4")
 
 [node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 mesh = ExtResource("5_ywv5c")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boat"]
-transform = Transform3D(0.5, 0, 0, 0, -0.031343, -0.499017, 0, 0.499017, -0.031343, 0, 2.32371, 0)
+transform = Transform3D(1, 0, 0, 0, -0.062686, -0.998033, 0, 0.998033, -0.062686, 0, 2.32371, 0)
 shape = SubResource("CapsuleShape3D_8gqqs")
 debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
 
