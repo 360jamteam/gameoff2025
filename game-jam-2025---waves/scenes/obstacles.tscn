@@ -6,7 +6,7 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rw70g"]
 friction = 0.0
-bounce = 1.0
+bounce = 0.5
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6tpbi"]
 albedo_color = Color(1, 0.843137, 1, 1)

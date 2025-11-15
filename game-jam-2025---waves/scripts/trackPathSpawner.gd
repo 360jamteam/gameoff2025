@@ -3,7 +3,7 @@ extends Path3D
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
 @export var buoy_spacing: float = 25.0
 @export var track_width: float = 120.0
-@export var wall_height: float = 100.0
+@export var wall_height: float = 300.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 
