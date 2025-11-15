@@ -65,7 +65,7 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	#make the wall less friction-y so the boat doesn't stick to it
 	var physics_object = PhysicsMaterial.new()
 	wall.physics_material_override = physics_object
-	physics_object.friction = 0.01
+	physics_object.friction = 0.0
 	
 	# mesh for wall
 	var mesh_instance = MeshInstance3D.new()

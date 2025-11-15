@@ -59,14 +59,11 @@ func handleControls():
 			apply_central_force(transform.basis.z * moveSpeed)
 		if Input.is_action_pressed("backward"):
 			apply_central_force(-transform.basis.z * moveSpeed)
-
-
 			
 		if Input.is_action_pressed("boost"):
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
 			
 		if Input.is_action_pressed("jump"):
-			#if submerged:
 			apply_central_impulse(Vector3.UP * jumpSpeed)
 		
 	#tricks
