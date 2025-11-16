@@ -29,7 +29,6 @@ func _ready():
 	wave_speed = material.get_shader_parameter("wave_speed")
 	height = material.get_shader_parameter("height")
 
-
 func _process(delta):
 	# keep this in sync with shader
 	time += delta
@@ -87,7 +86,7 @@ func get_height(world_position: Vector3) -> float:
 	var aabb = mesh.get_aabb()
 	var mesh_size = aabb.size
 	
-	var local_pos := to_local(world_position)
+	var local_pos = to_local(world_position)
 	
 	# calculate uv (0 to 1) based on position within the mesh 
 	# offset by half the mesh size to center it
@@ -106,29 +105,6 @@ func get_height(world_position: Vector3) -> float:
 	d2 = current_time * 0.5 + d2
 	
 	var dist_y = cos(d1) * 0.15 + cos(d2) * 0.05
-
-	# use local XZ so this matches what we store in spawned_waves
-	var local_xz := Vector2(local_pos.x, local_pos.z)
-
-	for w in spawned_waves:
-		var age: float = time - w.time
-		if age < 0.0 or age > spawned_wave_lifetime:
-			continue
-
-		var center: Vector2 = w.center
-		var dist := local_xz.distance_to(center)
-		if dist > spawned_wave_radius:
-			continue
-
-		# spatial falloff: 1 at center -> 0 at radius
-		var k := 1.0 - dist / spawned_wave_radius
-		k *= k  # smoother curve
-
-		# temporal pulse: 0 -> 1 -> 0 over its life
-		var t_norm := age / spawned_wave_lifetime
-		var pulse := sin(t_norm * PI)
-
-		dist_y += k * pulse * spawned_wave_height
 	
 	# return wave height at this pos
 	return global_position.y + dist_y * height

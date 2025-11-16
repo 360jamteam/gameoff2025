@@ -2,8 +2,8 @@ extends Path3D
 
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
 @export var buoy_spacing: float = 25.0
-@export var track_width: float = 60.0
-@export var wall_height: float = 50.0
+@export var track_width: float = 120.0
+@export var wall_height: float = 300.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 
@@ -61,6 +61,11 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	var wall = StaticBody3D.new()
 	wall.name = wall_name
 	add_child(wall)
+	
+	#make the wall less friction-y so the boat doesn't stick to it
+	var physics_object = PhysicsMaterial.new()
+	wall.physics_material_override = physics_object
+	physics_object.friction = 0.0
 	
 	# mesh for wall
 	var mesh_instance = MeshInstance3D.new()
@@ -133,7 +138,7 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	
 	# make it kinda see through for debug
 	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(1, 0, 0, 0.3) 
+	material.albedo_color = Color(1, 0, 0, 0.15) 
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	mesh_instance.material_override = material

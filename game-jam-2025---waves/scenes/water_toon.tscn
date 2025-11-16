@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
-[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
-[ext_resource type="Script" uid="uid://cfma8e6stqmd2" path="res://scripts/boat.gd" id="4_mste4"]
+[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 [ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
@@ -64,8 +64,8 @@ _data = {
 point_count = 25
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8gqqs"]
-radius = 3.0
-height = 9.0
+radius = 3.5
+height = 7.0
 
 [sub_resource type="Gradient" id="Gradient_3bo0k"]
 offsets = PackedFloat32Array(0, 0.995763, 1)
@@ -118,7 +118,7 @@ light_energy = 0.97
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.985551, 0.0131946, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, -7.56196, 16.483, -39.5556)
+transform = Transform3D(-0.985551, 0.0131947, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, 685.207, 16.483, -3641.88)
 near = 1.0
 far = 10000.0
 script = ExtResource("1_8gqqs")
@@ -132,14 +132,15 @@ script = ExtResource("2_vcdfo")
 spawned_wave_radius = 10.0
 spawned_wave_height = 5.0
 
-[node name="BuoyPath" type="Path3D" parent="Water"]
+[node name="TrackPath" type="Path3D" parent="Water"]
 curve = SubResource("Curve3D_n74q2")
 script = ExtResource("3_p1kvb")
 
 [node name="Boat" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 514.228, 7.68, -3098.46)
+mass = 10.0
 inertia = Vector3(1, 1, 1)
-linear_damp = 0.2
+linear_damp = 0.02
 angular_damp = 2.0
 script = ExtResource("4_mste4")
 water_angular_drag = 0.2
@@ -147,12 +148,12 @@ turnSpeed = 0.02
 recoverSpeed = 5.0
 
 [node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 mesh = ExtResource("5_ywv5c")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boat"]
-transform = Transform3D(0.5, 0, 0, 0, -0.031343, -0.499017, 0, 0.499017, -0.031343, 0, 2.32371, 0)
+transform = Transform3D(1, 0, 0, 0, -0.062686, -0.998033, 0, 0.998033, -0.062686, 0, 2.32371, 0)
 shape = SubResource("CapsuleShape3D_8gqqs")
 debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
 
