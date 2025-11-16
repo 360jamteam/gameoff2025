@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://cfma8e6stqmd2" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
-[ext_resource type="PackedScene" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
+[ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]

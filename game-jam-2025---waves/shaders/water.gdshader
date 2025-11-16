@@ -218,7 +218,7 @@
 	        if (i >= spawned_wave_count) {
 	            break;
 	        }
-			
+
 			float age = water_time - spawned_wave_times[i];
 	        if (age < 0.0 || age > spawned_wave_lifetime) {
 	            continue;
