@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=28 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
@@ -6,9 +6,11 @@
 [ext_resource type="Script" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
+[ext_resource type="PackedScene" uid="uid://csph08s8ntciy" path="res://scenes/WaveRipple.tscn" id="6_6tpbi"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 [ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
+[ext_resource type="Script" uid="uid://0mladwf0v3l3" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -144,6 +146,8 @@ linear_damp = 0.02
 angular_damp = 2.0
 script = ExtResource("4_mste4")
 water_angular_drag = 0.2
+debug_hud_path = NodePath("../WaveHUD")
+debug_ripple_scene = ExtResource("6_6tpbi")
 turnSpeed = 0.02
 recoverSpeed = 5.0
 
@@ -173,3 +177,14 @@ boat = NodePath("..")
 water = NodePath("../../Water/WaterMesh")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
+
+[node name="WaveHUD" type="CanvasLayer" parent="."]
+script = ExtResource("10_ywv5c")
+
+[node name="WaveLabel" type="Label" parent="WaveHUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0.780392, 0, 1)
+theme_override_font_sizes/font_size = 24

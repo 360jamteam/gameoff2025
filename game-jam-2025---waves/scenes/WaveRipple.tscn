@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://csph08s8ntciy"]
+
+[ext_resource type="Script" uid="uid://cdwws1ewvnl11" path="res://scripts/WaveRipple.gd" id="1_nogl6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i850o"]
+transparency = 1
+albedo_color = Color(0.258824, 1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jmycx"]
+material = SubResource("StandardMaterial3D_i850o")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.05
+
+[node name="WaveRipple" type="Node3D"]
+script = ExtResource("1_nogl6")
+
+[node name="RingMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_jmycx")
