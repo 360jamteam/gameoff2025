@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
-[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
+[ext_resource type="Script" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
@@ -130,7 +130,7 @@ mesh = SubResource("PlaneMesh_nnm43")
 skeleton = NodePath("../..")
 script = ExtResource("2_vcdfo")
 spawned_wave_radius = 10.0
-spawned_wave_height = 5.0
+spawned_wave_height = 10.0
 
 [node name="TrackPath" type="Path3D" parent="Water"]
 curve = SubResource("Curve3D_n74q2")

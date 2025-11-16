@@ -240,7 +240,7 @@
 	        extra_dist_y += k * pulse * spawned_wave_height;
 	    }
 
-	    float total_dist_y = base_dist_y + extra_dist_y;
+	    float total_dist_y = base_dist_y + extra_dist_y * 3.0;
 
 	    // final displacement
 	    VERTEX.y += total_dist_y * height;
