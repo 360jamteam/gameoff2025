@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://hp63y328kcfv"]
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="HBoxContainer (Volume)" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Volume" type="Label" parent="VBoxContainer/HBoxContainer (Volume)"]
+layout_mode = 2
+text = "Volume"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Volume)"]
+layout_mode = 2
+tick_count = 1
+
+[node name="HBoxContainer (Sensitivity)" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Sensitivity" type="Label" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
+layout_mode = 2
+text = "Sensitivity"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
+layout_mode = 2
+
+[node name="Button (Back)" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Back"
