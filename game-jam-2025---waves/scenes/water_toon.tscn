@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
+[ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
@@ -190,3 +191,6 @@ process_material = SubResource("ParticleProcessMaterial_as4el")
 draw_pass_1 = SubResource("QuadMesh_k80b6")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
+
+[node name="Waves" type="Node3D" parent="."]
+script = ExtResource("9_mste4")
