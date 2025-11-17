@@ -1,0 +1,157 @@
+[gd_scene load_steps=25 format=3 uid="uid://djlg762jdm4m4"]
+
+[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
+[ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
+[ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
+[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
+[ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
+[ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
+[ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
+noise_type = 3
+frequency = 0.0084
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7b4nq"]
+seamless = true
+noise = SubResource("FastNoiseLite_aitcd")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnm43"]
+sky_top_color = Color(0.306739, 0.627731, 0.942088, 1)
+sky_horizon_color = Color(0.606278, 0.875287, 0.994238, 1)
+sky_cover = SubResource("NoiseTexture2D_7b4nq")
+sky_cover_modulate = Color(0.728822, 0.728822, 0.728822, 1)
+
+[sub_resource type="Sky" id="Sky_nnm43"]
+sky_material = SubResource("ProceduralSkyMaterial_nnm43")
+
+[sub_resource type="Environment" id="Environment_0poqx"]
+background_mode = 2
+sky = SubResource("Sky_nnm43")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7b4nq"]
+render_priority = 0
+shader = ExtResource("2_p1kvb")
+shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
+shader_parameter/WATER2_COL = Vector4(0.04, 0.35, 0.78, 1)
+shader_parameter/FOAM_COL = Vector4(0.8125, 0.9609, 0.9648, 1)
+shader_parameter/distortion_speed = 2.0
+shader_parameter/tile = Vector2(100, 100)
+shader_parameter/height = 3.0
+shader_parameter/wave_size = Vector2(4, 4)
+shader_parameter/wave_speed = 4.5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nnm43"]
+material = SubResource("ShaderMaterial_7b4nq")
+size = Vector2(3000, 7000)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="Curve3D" id="Curve3D_n74q2"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 1, 0, 2328.56, 1, -4942.45, 406.991, 1, -103.36, -406.991, 1, 103.36, 891.827, 1, -3605.67, 30.528, 1, -420.717, -30.528, 1, 420.717, 507.947, 1, -2975.2, 273.796, 1, 9.309, -273.796, 1, -9.309, 139.235, 1, -2593.77, 182.46, 1, -95.266, -182.46, 1, 95.266, -357.844, 1, -2683.03, 203.818, 1, -88.069, -203.818, 1, 88.069, -583.721, 1, -2174.1, 142.761, 1, -69.871, -142.761, 1, 69.871, -987.009, 1, -2338.44, -20.186, 1, -165.103, 20.186, 1, 165.103, -1228.51, 1, -1870.41, -228.196, 1, -138.802, 228.196, 1, 138.802, -713.992, 1, -1438.9, -136.332, 1, -108.745, 136.332, 1, 108.745, -766.179, 1, -964.073, -146.706, 1, -35.685, 146.706, 1, 35.685, -331.544, 1, -952.024, -187.913, 1, -21.152, 187.913, 1, 21.152, -158.985, 1, -593.834, -90.869, 1, -225.755, 90.869, 1, 225.755, 531.811, 1, -847.358, 300.321, 1, -70.288, -300.321, 1, 70.288, 386.508, 1, -401.589, -25.342, 1, -325.01, 25.342, 1, 325.01, 690.313, 1, 196.152, 104.278, 1, -152.6, -104.278, 1, 152.6, 418.341, 1, 591.755, 208.099, 1, -239.699, -208.099, 1, 239.699, 435.043, 1, 1143.48, 272.317, 1, 116.325, -272.317, 1, -116.325, -426.353, 1, 1035.66, 92.101, 1, -111.089, -92.101, 1, 111.089, -1159.2, 1, 1015.85, 93.55, 1, -80.912, -93.55, 1, 80.912, -1255.86, 1, 1408.45, -183.719, 1, -252.032, 183.719, 1, 252.032, -1348.23, 1, 1812.82, -122.908, 1, 95.473, 122.908, 1, -95.473, -861.189, 1, 2119.66, -98.398, 1, -275.312, 98.398, 1, 275.312, -355.589, 1, 2219.72, 78.63, 1, -168.226, -78.63, 1, 168.226, -547.949, 1, 2903.68, 145.304, 1, -233.688, -145.304, -99.2053, 233.688, -822.514, 1, 3663.27),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 25
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8gqqs"]
+radius = 3.5
+height = 7.0
+
+[sub_resource type="Gradient" id="Gradient_3bo0k"]
+offsets = PackedFloat32Array(0, 0.995763, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.886, 0.886, 0.886, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_as4el"]
+gradient = SubResource("Gradient_3bo0k")
+
+[sub_resource type="Curve" id="Curve_3bo0k"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.36313, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_as4el"]
+curve = SubResource("Curve_3bo0k")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_as4el"]
+emission_shape_scale = Vector3(0.7, 0.7, 0.7)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 3)
+direction = Vector3(0, 0, 1)
+gravity = Vector3(0, 0, 1)
+scale_curve = SubResource("CurveTexture_as4el")
+color_ramp = SubResource("GradientTexture1D_as4el")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n74q2"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("6_wyvur")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+proximity_fade_enabled = true
+proximity_fade_distance = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_k80b6"]
+material = SubResource("StandardMaterial3D_n74q2")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0poqx")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.945519, 0.325568, 0, -0.325568, -0.945519, 0, 0, 0)
+light_energy = 0.97
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.985551, 0.0131947, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, 685.207, 16.483, -3641.88)
+near = 1.0
+far = 10000.0
+script = ExtResource("1_8gqqs")
+
+[node name="Water" type="Node3D" parent="."]
+
+[node name="WaterMesh" type="MeshInstance3D" parent="Water"]
+mesh = SubResource("PlaneMesh_nnm43")
+skeleton = NodePath("../..")
+script = ExtResource("2_vcdfo")
+
+[node name="TrackPath" type="Path3D" parent="Water"]
+curve = SubResource("Curve3D_n74q2")
+script = ExtResource("3_p1kvb")
+
+[node name="Boat" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 514.228, 7.68, -3098.46)
+mass = 10.0
+inertia = Vector3(1, 1, 1)
+linear_damp = 0.02
+angular_damp = 2.0
+script = ExtResource("4_mste4")
+
+[node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+mesh = ExtResource("5_ywv5c")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boat"]
+transform = Transform3D(1, 0, 0, 0, -0.062686, -0.998033, 0, 0.998033, -0.062686, 0, 2.32371, 0)
+shape = SubResource("CapsuleShape3D_8gqqs")
+debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Boat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.502755, -3.4821)
+amount = 50
+speed_scale = 2.6
+randomness = 0.86
+trail_enabled = true
+trail_lifetime = 1.78
+process_material = SubResource("ParticleProcessMaterial_as4el")
+draw_pass_1 = SubResource("QuadMesh_k80b6")
+
+[node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
