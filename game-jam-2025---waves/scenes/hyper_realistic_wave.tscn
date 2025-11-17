@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://yx44b87ltevg"]
+
+[ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="1_nwqb4"]
+[ext_resource type="Script" uid="uid://dxte7kal5kw8x" path="res://scripts/hyperRealisticWave.gd" id="1_peu85"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_peu85"]
+radius = 25.0
+height = 600.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oqwyx"]
+render_priority = 0
+shader = ExtResource("1_nwqb4")
+shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
+shader_parameter/WATER2_COL = Vector4(0.04, 0.35, 0.78, 1)
+shader_parameter/FOAM_COL = Vector4(0.8125, 0.9609, 0.9648, 1)
+shader_parameter/distortion_speed = 2.0
+shader_parameter/tile = Vector2(5, 50)
+shader_parameter/height = 2.0
+shader_parameter/wave_size = Vector2(2, 2)
+shader_parameter/wave_speed = 1.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_n4olv"]
+material = SubResource("ShaderMaterial_oqwyx")
+radius = 30.0
+height = 600.0
+radial_segments = 8
+rings = 3
+
+[node name="HyperRealisticWave" type="Area3D"]
+script = ExtResource("1_peu85")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_peu85")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_n4olv")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
