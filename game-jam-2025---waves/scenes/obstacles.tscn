@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bexah01ookd2g"]
 
-[ext_resource type="Script" uid="uid://dbpmyggv312yl" path="res://obstacles.gd" id="1_rw70g"]
+[ext_resource type="Script" uid="uid://dbpmyggv312yl" path="res://scripts/obstacles.gd" id="1_rw70g"]
 [ext_resource type="ArrayMesh" uid="uid://bxfk1jqwkmsw6" path="res://assets/squid.obj" id="2_2fc1n"]
 [ext_resource type="Texture2D" uid="uid://dhfjqjii7mgh7" path="res://assets/squid.png" id="3_jei10"]
 

@@ -1,5 +1,7 @@
-# adapted from How to make things float in Godot 4: https://www.youtube.com/watch?v=_R2KDcAp1YQ&t=200s
-# MAKE BOAT ONLY BE ABLE TO MOVE WHEN TOUCHING WATER
+# buoyancy code adapted from How to make things float in Godot 4: https://www.youtube.com/watch?v=_R2KDcAp1YQ&t=200s
+# 
+# boat only accpts input for forward, backwards, boosts, and jump
+# when submerged = true
 
 extends RigidBody3D
 
@@ -12,13 +14,17 @@ extends RigidBody3D
 @export var boostMod := 2.0
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 1200.0  
+@export var jumpSpeed := 70.0
 
 #trick settings
 var totalScore = 0.0
 var touchingWater = true
 var trickAngles = [180, 360, 720, 1080]
 
-@export var jumpSpeed := 70.0
+# wave effect settings
+var inWave := false
+var waveForce := 100.0
+var waveTorque := 1.0
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water/WaterMesh"
@@ -46,6 +52,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 		
 	handleControls()
 	makeItFloat()
+	handleWaveCollision()
 
 func handleControls():
 	#movement options:
@@ -105,5 +112,23 @@ func crazyAssTricks():
 	#set flags when angle passses x amount
 	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
 	#then add to total score
+	
+func setInWave() -> void:
+	inWave = true
+	
+func setNotInWave() -> void:
+	inWave = false
+
+func handleWaveCollision() -> void:
+	if not inWave:
+		return
+	# get boat speed
+	var boatSpeed = linear_velocity.length()
+	# get force multipler based on boatspeed
+	var waveMultiplier = clamp(boatSpeed / 100.0, 0.7, 5.0)
+	#push boat back
+	apply_central_impulse(-transform.basis.z * waveForce * waveMultiplier * 2)
+	#spin boat
+	apply_torque_impulse(transform.basis.y * waveTorque * waveMultiplier)
 	
 	
