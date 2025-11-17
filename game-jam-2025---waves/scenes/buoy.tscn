@@ -6,12 +6,16 @@
 bounce = 0.55
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ry4qp"]
-albedo_color = Color(0.937255, 0.27451, 0.12549, 1)
+albedo_color = Color(0.835198, 0.227885, 0.0870512, 1)
+metallic = 0.5
+metallic_specular = 0.3
 
 [sub_resource type="SphereMesh" id="SphereMesh_hxl6b"]
 material = SubResource("StandardMaterial3D_ry4qp")
-radius = 1.5
-height = 3.0
+radius = 10.0
+height = 100.0
+radial_segments = 32
+rings = 16
 
 [node name="StaticBody3D" type="StaticBody3D"]
 physics_material_override = SubResource("PhysicsMaterial_hxl6b")

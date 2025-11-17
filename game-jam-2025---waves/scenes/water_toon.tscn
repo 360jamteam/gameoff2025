@@ -1,13 +1,25 @@
-[gd_scene load_steps=25 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=29 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
+[ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
+[ext_resource type="Texture2D" uid="uid://cl5tr4tynresr" path="res://assets/citrink-1x - Copy.png" id="2_wyvur"]
 [ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
+[ext_resource type="Texture2D" uid="uid://bxllfr7fk46no" path="res://assets/bayer16tile2.png" id="3_wyvur"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
+shader = ExtResource("1_mste4")
+shader_parameter/u_dither_tex = ExtResource("3_wyvur")
+shader_parameter/u_color_tex = ExtResource("2_wyvur")
+shader_parameter/u_bit_depth = 64
+shader_parameter/u_contrast = 1.8
+shader_parameter/u_offset = -0.05
+shader_parameter/u_dither_size = 3
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -18,8 +30,8 @@ seamless = true
 noise = SubResource("FastNoiseLite_aitcd")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnm43"]
-sky_top_color = Color(0.306739, 0.627731, 0.942088, 1)
-sky_horizon_color = Color(0.606278, 0.875287, 0.994238, 1)
+sky_top_color = Color(0.0877594, 0.391381, 0.655097, 1)
+sky_horizon_color = Color(0.148254, 0.688983, 0.874673, 1)
 sky_cover = SubResource("NoiseTexture2D_7b4nq")
 sky_cover_modulate = Color(0.728822, 0.728822, 0.728822, 1)
 
@@ -29,13 +41,22 @@ sky_material = SubResource("ProceduralSkyMaterial_nnm43")
 [sub_resource type="Environment" id="Environment_0poqx"]
 background_mode = 2
 sky = SubResource("Sky_nnm43")
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.726229, 0.752314, 0.793301, 1)
+fog_light_energy = 1.17
+fog_density = 0.3511
+fog_sky_affect = 0.0
+fog_depth_curve = 2.21914
+fog_depth_begin = 95.1
+fog_depth_end = 648.3
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7b4nq"]
 render_priority = 0
 shader = ExtResource("2_p1kvb")
 shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
-shader_parameter/WATER2_COL = Vector4(0.04, 0.35, 0.78, 1)
-shader_parameter/FOAM_COL = Vector4(0.8125, 0.9609, 0.9648, 1)
+shader_parameter/WATER2_COL = Vector4(0.04, 0.2, 0.4, 1)
+shader_parameter/FOAM_COL = Vector4(0.4, 0.4, 0.4, 1)
 shader_parameter/distortion_speed = 2.0
 shader_parameter/tile = Vector2(100, 100)
 shader_parameter/height = 3.0
@@ -101,19 +122,33 @@ material = SubResource("StandardMaterial3D_n74q2")
 
 [node name="Node3D" type="Node3D"]
 
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_ywv5c")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(-0.985551, 0.0131947, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, 685.207, 16.483, -3641.88)
+near = 1.0
+far = 1000.0
+script = ExtResource("1_8gqqs")
+followOffset = Vector3(0, 15, -65)
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0poqx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.945519, 0.325568, 0, -0.325568, -0.945519, 0, 0, 0)
-light_energy = 0.97
+transform = Transform3D(1, 0, 0, 0, -0.789084, 0.614285, 0, -0.614285, -0.789084, 0, 0, 0)
+light_energy = 0.8
 shadow_enabled = true
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.985551, 0.0131947, -0.168867, -0.00616113, 0.993509, 0.113587, 0.16927, 0.112986, -0.979072, 685.207, 16.483, -3641.88)
-near = 1.0
-far = 10000.0
-script = ExtResource("1_8gqqs")
 
 [node name="Water" type="Node3D" parent="."]
 
@@ -145,7 +180,7 @@ shape = SubResource("CapsuleShape3D_8gqqs")
 debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Boat"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.502755, -3.4821)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02586, -3.48218)
 amount = 50
 speed_scale = 2.6
 randomness = 0.86

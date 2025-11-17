@@ -1,9 +1,10 @@
 extends Path3D
 
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
-@export var buoy_spacing: float = 25.0
-@export var track_width: float = 120.0
-@export var wall_height: float = 300.0
+@export var buoy_spacing: float = 70.0
+@export var buoy_offset_from_wall: float = 20.0
+@export var track_width: float = 300.0
+@export var wall_height: float = 400.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 
@@ -34,8 +35,8 @@ func spawn_buoys():
 	for i in range(num_buoys):
 		var offset = (i * buoy_spacing)
 		
-		spawn_buoy_at_offset(offset, -track_width / 2.0)
-		spawn_buoy_at_offset(offset, track_width / 2.0)
+		spawn_buoy_at_offset(offset, (-track_width / 2.0) - buoy_offset_from_wall)
+		spawn_buoy_at_offset(offset, (track_width / 2.0) + buoy_offset_from_wall)
 
 func spawn_buoy_at_offset(along_path: float, perpendicular_offset: float):
 	var buoy = buoy_scene.instantiate()
@@ -134,14 +135,14 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	mesh_instance.mesh = array_mesh
 	
 	# make mesh invisible
-	#mesh_instance.visible = false
+	mesh_instance.visible = false
 	
 	# make it kinda see through for debug
-	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(1, 0, 0, 0.15) 
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mesh_instance.material_override = material
+	#var material = StandardMaterial3D.new()
+	#material.albedo_color = Color(1, 0, 0, 0.15) 
+	#material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	#material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	#mesh_instance.material_override = material
 
 	# create collision shape from mesh
 	var concave_shape = array_mesh.create_trimesh_shape()
