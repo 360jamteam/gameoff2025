@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=30 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
