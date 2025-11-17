@@ -1,41 +1,81 @@
 extends CanvasLayer
-# Simple HUD for short messages ("WAVE (W)", "JUMP (SPACE)")
-# and for showing/hiding the WRONG WAY warning.
+# Handles:
+#  - WAVE (W) hint
+#  - JUMP (SPACE) hint
+#  - BOOST (SHIFT) hint
+#  - WRONG WAY warning (separate label so it never overlaps)
 
-@onready var wave_label: Label = $WaveLabel
+@onready var wave_label: Label      = $WaveLabel
+@onready var jump_label: Label      = $JumpLabel
+@onready var boost_label: Label     = $BoostLabel
 @onready var wrong_way_label: Label = $WrongWayLabel
 
-var _timer: float = 0.0
-@export var message_duration: float = 0.7
+var _wave_timer:  float = 0.0
+var _jump_timer:  float = 0.0
+var _boost_timer: float = 0.0
+
+@export var message_duration: float = 0.7   # how long W/JUMP/BOOST stay on screen
 
 func _ready() -> void:
-	# Make sure WRONG WAY starts hidden
+	# make sure everything starts hidden
+	if wave_label:
+		wave_label.visible = false
+	if jump_label:
+		jump_label.visible = false
+	if boost_label:
+		boost_label.visible = false
 	if wrong_way_label:
 		wrong_way_label.visible = false
+		wrong_way_label.modulate = Color(1.0, 0.3, 0.3) # red-ish
 
 func _process(delta: float) -> void:
-	# Handle auto-hide for the small action messages
-	if _timer > 0.0:
-		_timer -= delta
-		if _timer <= 0.0 and wave_label:
+	# WAVE text timer
+	if _wave_timer > 0.0:
+		_wave_timer -= delta
+		if _wave_timer <= 0.0 and wave_label:
 			wave_label.visible = false
 
-func show_message(text: String, color: Color) -> void:
-	# Called from boat.gd to show WAVE / JUMP messages.
-	if wave_label == null:
+	# JUMP text timer
+	if _jump_timer > 0.0:
+		_jump_timer -= delta
+		if _jump_timer <= 0.0 and jump_label:
+			jump_label.visible = false
+
+	# BOOST text timer
+	if _boost_timer > 0.0:
+		_boost_timer -= delta
+		if _boost_timer <= 0.0 and boost_label:
+			boost_label.visible = false
+
+# called from boat.gd 
+
+func show_wave_message(text: String, color: Color) -> void:
+	if not wave_label:
 		return
 	wave_label.text = text
 	wave_label.modulate = color
 	wave_label.visible = true
-	_timer = message_duration
+	_wave_timer = message_duration
 
-func set_wrong_way(is_wrong: bool) -> void:
-	# Called from boat.gd, just toggles the WRONG WAY label.
-	if wrong_way_label == null:
+func show_jump_message(text: String, color: Color) -> void:
+	if not jump_label:
 		return
+	jump_label.text = text
+	jump_label.modulate = color
+	jump_label.visible = true
+	_jump_timer = message_duration
 
-	wrong_way_label.visible = is_wrong
-	if is_wrong:
+func show_boost_message(text: String, color: Color) -> void:
+	if not boost_label:
+		return
+	boost_label.text = text
+	boost_label.modulate = color
+	boost_label.visible = true
+	_boost_timer = message_duration
+
+func set_wrong_way(enabled: bool) -> void:
+	if not wrong_way_label:
+		return
+	wrong_way_label.visible = enabled
+	if enabled:
 		wrong_way_label.text = "WRONG WAY"
-		# make it reddish here instead of in boat.gd
-		wrong_way_label.modulate = Color(1.0, 0.3, 0.3)

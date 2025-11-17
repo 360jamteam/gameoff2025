@@ -52,9 +52,10 @@ func _ready():
 	if track_path != NodePath():
 		track = get_node_or_null(track_path) as Path3D
 	
-	# Wave HUD (handles both WAVE/JUMP messages + WRONG WAY label)
+	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
+
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
@@ -72,6 +73,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# WRONG WAY detection (uses physics step delta + velocity)
 	update_wrong_way(state.get_step(), state)
 
+
 func handleControls():
 	#movement options:
 	if Input.is_action_pressed("left"):
@@ -79,31 +81,32 @@ func handleControls():
 	if Input.is_action_pressed("right"):
 		apply_torque_impulse(transform.basis.y * -turnSpeed)
 	
-	# Hud messages
+	# --- HUD messages (these only fire on the first press) ---
 	if Input.is_action_just_pressed("forward"):
-		if wave_hud and wave_hud.has_method("show_message"):
+		if wave_hud and wave_hud.has_method("show_wave_message"):
 			wave_hud.call(
-				"show_message",
-				"WAVE (W)",
+				"show_wave_message",
+				"ACCELERATE (W)",
 				Color(0.6, 1.0, 0.6)
 			)
 
 	if Input.is_action_just_pressed("jump"):
-		if wave_hud and wave_hud.has_method("show_message"):
+		if wave_hud and wave_hud.has_method("show_jump_message"):
 			wave_hud.call(
-				"show_message",
+				"show_jump_message",
 				"JUMP (SPACE)",
 				Color(1.0, 0.8, 0.4)
 			)
 	
 	if Input.is_action_just_pressed("boost"):
-		if wave_hud and wave_hud.has_method("show_message"):
+		if wave_hud and wave_hud.has_method("show_boost_message"):
 			wave_hud.call(
-				"show_message",
+				"show_boost_message",
 				"BOOST (SHIFT)",
-				Color(0.6, 0.8, 1.0) # light blue-ish, tweak if you want
+				Color(0.6, 0.8, 1.0)
 			)
-	
+	# --------------------------------------------------------
+
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
@@ -129,6 +132,7 @@ func handleControls():
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
+
 func makeItFloat():
 	submerged = false
 	var body_height = global_transform.origin.y
@@ -139,6 +143,7 @@ func makeItFloat():
 		submerged = true
 		apply_force(Vector3.UP * float_force * gravity * depth)
 	
+
 func recoverBoat():
 	# get up direction for boat
 	var current_up = global_transform.basis.y
@@ -146,6 +151,7 @@ func recoverBoat():
 	var correction_axis = current_up.cross(Vector3.UP)
 	# apply recovery torque
 	apply_torque(correction_axis * recoverSpeed)
+
 
 func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if track == null:
@@ -195,9 +201,10 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	
 	var is_wrong := wrong_way_timer >= wrong_way_time_threshold
 
-	# 🔴 NEW: let WaveHUD decide what to do with the label
+	# let WaveHUD decide what to do with the label
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
+
 
 func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
@@ -209,11 +216,14 @@ func crazyAssTricks():
 	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
 	#then add to total score
 	
+
 func setInWave() -> void:
 	inWave = true
 	
+
 func setNotInWave() -> void:
 	inWave = false
+
 
 func handleWaveCollision() -> void:
 	if not inWave:
