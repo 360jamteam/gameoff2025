@@ -19,3 +19,4 @@
 
 #### Development process (video, wiki, etc)
 - Sho, [Initial water & track development (wiki page)](https://github.com/360jamteam/gameoff2025/wiki/Initial-water-&-track-development-%E2%80%90-Sho)
+- Nicole, [First Try at Making Waves (wiki page)](https://github.com/360jamteam/gameoff2025/wiki/Nicole-%E2%80%93-First-Try-at-Making-Waves)
