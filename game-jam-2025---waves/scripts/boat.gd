@@ -31,6 +31,7 @@ var waveTorque := 1.0
 @export var wrong_way_speed_min := 5.0        # don't warn if crawling
 @export var wrong_way_time_threshold := 0.5   # seconds of going wrong way before showing text
 @export var wave_hud_path: NodePath
+
 var track: Path3D
 var wrong_way_timer := 0.0
 var wave_hud: CanvasLayer
@@ -55,7 +56,6 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
-
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
@@ -132,7 +132,6 @@ func handleControls():
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
-
 func makeItFloat():
 	submerged = false
 	var body_height = global_transform.origin.y
@@ -142,7 +141,6 @@ func makeItFloat():
 	if depth > 0:
 		submerged = true
 		apply_force(Vector3.UP * float_force * gravity * depth)
-	
 
 func recoverBoat():
 	# get up direction for boat
