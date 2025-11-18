@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=32 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
+[ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")
@@ -213,6 +214,7 @@ theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
 
 [node name="WrongWayLabel" type="Label" parent="WaveHUD"]
+use_parent_material = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -220,8 +222,9 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(0.894118, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("14_osogu")
+theme_override_font_sizes/font_size = 100
 
 [node name="JumpLabel" type="Label" parent="WaveHUD"]
 anchors_preset = 7
