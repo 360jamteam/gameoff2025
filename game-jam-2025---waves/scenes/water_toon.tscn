@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=35 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
+[ext_resource type="AudioStream" uid="uid://wamwyexftkbb" path="res://assets/audio/boat_engine_loop.mp3" id="11_smnpv"]
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://c8tsfrqh8gqw5" path="res://assets/audio/Underwater Music.mp3" id="15_mx6pg"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
@@ -175,6 +176,7 @@ angular_damp = 2.0
 script = ExtResource("4_mste4")
 track_path = NodePath("../Water/TrackPath")
 wave_hud_path = NodePath("../WaveHUD")
+engine_audio_path = NodePath("BoatEngine")
 
 [node name="ShipMesh" type="MeshInstance3D" parent="Boat"]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
@@ -195,6 +197,10 @@ trail_enabled = true
 trail_lifetime = 1.78
 process_material = SubResource("ParticleProcessMaterial_as4el")
 draw_pass_1 = SubResource("QuadMesh_k80b6")
+
+[node name="BoatEngine" type="AudioStreamPlayer2D" parent="Boat"]
+stream = ExtResource("11_smnpv")
+autoplay = true
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
 
@@ -256,12 +262,12 @@ theme_override_font_sizes/font_size = 40
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("15_mx6pg")
-volume_db = -10.0
+volume_db = -16.0
 autoplay = true
 parameters/looping = true
 
 [node name="OceanLoop2D" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("15_xqjy6")
-volume_db = -6.0
+volume_db = -10.0
 autoplay = true
 parameters/looping = true

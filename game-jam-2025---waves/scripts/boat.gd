@@ -32,6 +32,9 @@ var waveTorque := 1.0
 @export var wrong_way_time_threshold := 0.5   # seconds of going wrong way before showing text
 @export var wave_hud_path: NodePath
 
+@export var engine_audio_path: NodePath
+var engine_audio: AudioStreamPlayer2D
+
 var track: Path3D
 var wrong_way_timer := 0.0
 var wave_hud: CanvasLayer
@@ -56,6 +59,19 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
+		
+	if engine_audio_path != NodePath():
+		engine_audio = get_node_or_null(engine_audio_path)
+		if engine_audio:
+			engine_audio.play()
+			engine_audio.volume_db = -3.0
+			
+func _process(_delta):
+	var speed := linear_velocity.length()
+	
+	if engine_audio:
+		engine_audio.pitch_scale = clamp(0.6 + speed / 120.0, 0.6, 1.8)
+		engine_audio.volume_db = clamp(-18.0 + speed * 0.2, -18.0, -2.0)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
@@ -72,7 +88,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	
 	# WRONG WAY detection (uses physics step delta + velocity)
 	update_wrong_way(state.get_step(), state)
-
 
 func handleControls():
 	#movement options:
@@ -150,7 +165,6 @@ func recoverBoat():
 	# apply recovery torque
 	apply_torque(correction_axis * recoverSpeed)
 
-
 func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if track == null:
 		return
@@ -203,7 +217,6 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
 
-
 func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
 	if touchingWater == false:
@@ -214,14 +227,11 @@ func crazyAssTricks():
 	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
 	#then add to total score
 	
-
 func setInWave() -> void:
 	inWave = true
 	
-
 func setNotInWave() -> void:
 	inWave = false
-
 
 func handleWaveCollision() -> void:
 	if not inWave:
