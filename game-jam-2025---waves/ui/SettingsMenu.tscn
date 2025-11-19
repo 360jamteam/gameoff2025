@@ -1,10 +1,18 @@
-[gd_scene format=3 uid="uid://hp63y328kcfv"]
+[gd_scene load_steps=5 format=3 uid="uid://hp63y328kcfv"]
+
+[ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_rd3qm"]
+[ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_1j15u"]
+[ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_7lsre"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6xtrn"]
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -12,33 +20,49 @@ grow_vertical = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme_override_constants/separation = 15
 alignment = 1
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Settings"
+horizontal_alignment = 1
 
 [node name="HBoxContainer (Volume)" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
 
 [node name="Volume" type="Label" parent="VBoxContainer/HBoxContainer (Volume)"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Volume"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Volume)"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 tick_count = 1
 
 [node name="HBoxContainer (Sensitivity)" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
 
 [node name="Sensitivity" type="Label" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Sensitivity"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="Button (Back)" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6xtrn")
+theme_override_styles/hover = ExtResource("1_rd3qm")
+theme_override_styles/pressed = ExtResource("2_1j15u")
+theme_override_styles/normal = ExtResource("3_7lsre")
 text = "Back"

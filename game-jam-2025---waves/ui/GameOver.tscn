@@ -1,31 +1,91 @@
-[gd_scene format=3 uid="uid://6b02kswd4una"]
+[gd_scene load_steps=9 format=3 uid="uid://6b02kswd4una"]
+
+[ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_xrird"]
+[ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_rik4a"]
+[ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_dpy0x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wa1q8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wa1q8"]
+bg_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.466667)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvna2"]
+bg_color = Color(0.12549, 0.12549, 0.12549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.666667)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2b5w"]
+bg_color = Color(0.188235, 0.188235, 0.188235, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.2)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s2b5w"]
 
 [node name="GameOver" type="Control"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_top = -22.0
+offset_right = 92.0
+offset_bottom = 123.0
+theme_override_constants/separation = 15
 alignment = 1
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "Game Over"
+theme_override_font_sizes/font_size = 28
+text = "Game Over!"
 
 [node name="Label2" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "Score: 0"
 
 [node name="Button (Retry)" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wa1q8")
+theme_override_styles/hover = SubResource("StyleBoxFlat_wa1q8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cvna2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_s2b5w")
 text = "Retry"
 
 [node name="Button (Main Menu)" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_s2b5w")
+theme_override_styles/hover = ExtResource("1_xrird")
+theme_override_styles/pressed = ExtResource("2_rik4a")
+theme_override_styles/normal = ExtResource("3_dpy0x")
 text = "Main Menu"
