@@ -32,8 +32,10 @@ var waveTorque := 1.0
 @export var wrong_way_time_threshold := 0.5   # seconds of going wrong way before showing text
 @export var wave_hud_path: NodePath
 
+# 🔊 boat whoosh
 @export var engine_audio_path: NodePath
-var engine_audio: AudioStreamPlayer2D
+var engine_audio: AudioStreamPlayer
+var engine_started: bool = false # true after player actaully moves the moat
 
 var track: Path3D
 var wrong_way_timer := 0.0
@@ -60,18 +62,53 @@ func _ready():
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
 		
+	# engine / whoosh
 	if engine_audio_path != NodePath():
-		engine_audio = get_node_or_null(engine_audio_path)
+		engine_audio = get_node_or_null(engine_audio_path) as AudioStreamPlayer
 		if engine_audio:
-			engine_audio.play()
-			engine_audio.volume_db = -3.0
+			engine_audio.stop()
+			engine_audio.volume_db = -18.0   # fairly quiet starting point
 			
-func _process(_delta):
+func _process(delta: float) -> void:
+	if not engine_audio:
+		return
+
+	var in_water := submerged
+	var forward_held := Input.is_action_pressed("forward")
+	var boost_held := Input.is_action_pressed("boost")
 	var speed := linear_velocity.length()
-	
-	if engine_audio:
-		engine_audio.pitch_scale = clamp(0.6 + speed / 120.0, 0.6, 1.8)
-		engine_audio.volume_db = clamp(-18.0 + speed * 0.2, -18.0, -2.0)
+
+	var target_vol := -40.0
+	var should_play := false
+
+	if in_water and boost_held:
+		# 🔹 BOOST: starts basically right away and gets loud
+		if not engine_audio.playing:
+			engine_audio.play()  # start of loop
+		should_play = true
+
+		var t : float = clamp(speed / 6.0, 0.0, 1.0)   # ramps quickly
+		target_vol = lerp(-16.0, -4.0, t)       # louder overall
+
+	elif in_water and forward_held and speed > 1.5:
+		# 🔹 FORWARD ONLY: softer and kicks in later
+		if not engine_audio.playing:
+			engine_audio.play()
+		should_play = true
+
+		# need a bit more speed before it gets loud
+		var t : float = clamp((speed - 1.5) / 10.0, 0.0, 1.0)
+		target_vol = lerp(-24.0, -10.0, t)
+
+	# --- Apply / fade out ---
+	if should_play:
+		engine_audio.volume_db = lerp(engine_audio.volume_db, target_vol, delta * 8.0)
+	else:
+		if engine_audio.playing:
+			engine_audio.volume_db = lerp(engine_audio.volume_db, -40.0, delta * 8.0)
+			if engine_audio.volume_db < -35.0:
+				engine_audio.stop()
+
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
@@ -123,17 +160,28 @@ func handleControls():
 	# --------------------------------------------------------
 
 	if submerged:
+		var moved_this_frame := false
+		
 		if Input.is_action_pressed("forward"):
+			moved_this_frame = true
 			apply_central_force(transform.basis.z * moveSpeed)
 			
 		if Input.is_action_pressed("backward"):
+			moved_this_frame = true
 			apply_central_force(-transform.basis.z * moveSpeed)
 			
 		if Input.is_action_pressed("boost"):
+			moved_this_frame = true
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
 			
 		if Input.is_action_pressed("jump"):
 			apply_central_impulse(Vector3.UP * jumpSpeed)
+		
+		# 🔊 first time we actually move in the water → start engine
+		if moved_this_frame and engine_audio and not engine_started:
+			engine_started = true
+			engine_audio.volume_db = -24.0   # quiet-ish start
+			engine_audio.play()
 		
 	#tricks
 	if Input.is_action_pressed("uarrow"):
