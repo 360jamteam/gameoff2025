@@ -17,9 +17,13 @@ extends RigidBody3D
 @export var jumpSpeed := 70.0
 
 #trick settings
-var totalScore = 0.0
-var touchingWater = true
-var trickAngles = [180, 360, 720, 1080]
+var totalScore := 0
+var touchingWater := true
+var lastRotation := Vector3.ZERO
+var totalSpins := Vector3.ZERO
+var spinThreshold := 360.0
+var spinPoints := 100
+@onready var scoreLabel: RichTextLabel = get_node_or_null("../CanvasLayer/ScoreLabel")
 
 # wave effect settings
 var inWave := false
@@ -55,6 +59,9 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
+	
+	#start tracking rotation for tricks
+	lastRotation = transform.basis.get_euler()
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
@@ -62,10 +69,15 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
 	
-	#when not doing tricks, 
+	#when not doing tricks
 	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
 		recoverBoat()
-		
+		#check if trick was landed
+		checkTrickLanding()
+	
+	#track tricks
+	crazyAssTricks()
+	
 	handleControls()
 	makeItFloat()
 	handleWaveCollision()
@@ -135,6 +147,7 @@ func handleControls():
 
 func makeItFloat():
 	submerged = false
+	touchingWater = false
 	var body_height = global_transform.origin.y
 	var water_height = water.get_height(global_transform.origin)
 	var depth = water_height - body_height
@@ -143,14 +156,84 @@ func makeItFloat():
 		submerged = true
 		apply_force(Vector3.UP * float_force * gravity * depth)
 	
+	if depth >= 0:
+		touchingWater = true
+	
 
 func recoverBoat():
-	# get up direction for boat
+	#get up direction for boat
 	var current_up = global_transform.basis.y
-	# calc how much to rotate boat to get to actual up
+	#calc how much to rotate boat to get to actual up
 	var correction_axis = current_up.cross(Vector3.UP)
-	# apply recovery torque
+	#apply torque to recover
 	apply_torque(correction_axis * recoverSpeed)
+
+
+func crazyAssTricks():
+	#get current rotation in degrees
+	var currentRotation = transform.basis.get_euler()
+	#rotation delta
+	var rotationDelta = currentRotation - lastRotation
+	#handle  of over 180 degrees
+	for i in range(3):
+		if rotationDelta[i] > PI:
+			rotationDelta[i] -= TAU
+		elif rotationDelta[i] < -PI:
+			rotationDelta[i] += TAU
+	
+	#add to total spins
+	totalSpins += rotationDelta * (180.0 / PI)
+	
+	#update last rotation
+	lastRotation = currentRotation
+
+
+func checkTrickLanding():
+	#calculate completed spins on each axis
+	var xSpins = int(abs(totalSpins.x) / spinThreshold)
+	var ySpins = int(abs(totalSpins.y) / spinThreshold)
+	var zSpins = int(abs(totalSpins.z) / spinThreshold)
+	
+	#check if trick was landed by seeing if boat is upright and touching water
+	if touchingWater and abs(totalSpins.x) < 45 and abs(totalSpins.z) < 45:
+		#trick landed successfully
+		if xSpins > 0 or ySpins > 0 or zSpins > 0:
+			print("Holy Gnarly Trick landed! Total spins - X: ", xSpins, " Y: ", ySpins, " Z: ", zSpins)
+			calcPoints(xSpins, ySpins, zSpins)
+		totalSpins = Vector3.ZERO
+	elif touchingWater:
+		#failed trick reset
+		if xSpins > 0 or ySpins > 0 or zSpins > 0:
+			print("totally buggered that one")
+		totalSpins = Vector3.ZERO
+
+
+func calcPoints(xSpins: int, ySpins: int, zSpins: int):
+	var points := 0
+	
+	#single axis tricks
+	if xSpins > 0 and ySpins == 0 and zSpins == 0:
+		points = xSpins * 100
+	elif xSpins == 0 and ySpins > 0 and zSpins == 0:
+		points = ySpins * 100
+	elif xSpins == 0 and ySpins == 0 and zSpins > 0:
+		points = zSpins * 100
+	
+	#double axis tricks
+	elif xSpins > 0 and ySpins > 0 and zSpins == 0:
+		points = (xSpins * 100) * (ySpins * 100)
+	elif xSpins > 0 and ySpins == 0 and zSpins > 0:
+		points = (xSpins * 100) * (zSpins * 100)
+	elif xSpins == 0 and ySpins > 0 and zSpins > 0:
+		points = (ySpins * 100) * (zSpins * 100)
+	
+	#triple axis tricks
+	elif xSpins > 0 and ySpins > 0 and zSpins > 0:
+		points = (xSpins * 100) * (ySpins * 100) * (zSpins * 100)
+	
+	totalScore += points
+	print("Points earned: ", points, " | Total score: ", totalScore)
+	
 
 
 func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
@@ -205,17 +288,6 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
 
-
-func crazyAssTricks():
-	var boat = get_node_or_null("../Boat")
-	if touchingWater == false:
-		var yes = 0
-	#fill out later with when not touching water, track the angles rotated
-	#maybe use an array of angles, [180, 360, 720, 1080], and more 
-	#set flags when angle passses x amount
-	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
-	#then add to total score
-	
 
 func setInWave() -> void:
 	inWave = true

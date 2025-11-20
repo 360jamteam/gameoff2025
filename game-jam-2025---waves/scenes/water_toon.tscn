@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
-[ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
+[ext_resource type="Script" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
-[ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
+[ext_resource type="Script" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
-[ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
+[ext_resource type="Script" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
