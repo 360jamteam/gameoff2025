@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=28 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
+[ext_resource type="FontFile" uid="uid://ccy6dltko5gt5" path="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf" id="11_wyvur"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -213,3 +214,20 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.745098, 0, 0.85098, 1)
 theme_override_font_sizes/font_size = 40
+
+[node name="CountdownLabel" type="Label" parent="WaveHUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("11_wyvur")
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -26,6 +26,10 @@ var inWave := false
 var waveForce := 100.0
 var waveTorque := 1.0
 
+# countdown / control lock
+var can_control := false
+var countdown := 10.0   # seconds
+
 # WRONG WAY settings
 @export var track_path: NodePath
 @export var wrong_way_speed_min := 5.0        # don't warn if crawling
@@ -55,22 +59,46 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
-
+	
+	can_control = false
+	countdown = 10.0
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
+	# countdown at start (blocks player control) 
+	if countdown > -1.0:
+		countdown -= state.get_step()
+
+		# tell the HUD what to show
+		if wave_hud and wave_hud.has_method("update_countdown"):
+			wave_hud.call("update_countdown", countdown)
+
+		# turn controls on once timer finishes
+		if countdown <= 0.0 and not can_control:
+			can_control = true
+
+
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
-	
-	#when not doing tricks, 
-	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
+
+	# Only recover + control if countdown finished
+	if can_control and not (
+		Input.is_action_pressed("uarrow")
+		or Input.is_action_pressed("darrow")
+		or Input.is_action_pressed("larrow")
+		or Input.is_action_pressed("rarrow")
+	):
 		recoverBoat()
-		
-	handleControls()
+
+	# Controls only after countdown
+	if can_control:
+		handleControls()
+
+	# Boat physics still always run
 	makeItFloat()
 	handleWaveCollision()
-	
-	# WRONG WAY detection (uses physics step delta + velocity)
+
+	# WRONG WAY logic always runs
 	update_wrong_way(state.get_step(), state)
 
 
