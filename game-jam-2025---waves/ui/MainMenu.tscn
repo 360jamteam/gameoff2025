@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://cugh30hdhr0hj"]
+[gd_scene load_steps=8 format=3 uid="uid://cugh30hdhr0hj"]
 
+[ext_resource type="Script" uid="uid://c01p7gc5dtm75" path="res://ui/main_menu.gd" id="1_8v85u"]
 [ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_nmrkx"]
 [ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_8v85u"]
 [ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_x262b"]
@@ -19,6 +20,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_8v85u")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -60,3 +62,6 @@ theme_override_styles/hover = ExtResource("1_nmrkx")
 theme_override_styles/pressed = ExtResource("2_8v85u")
 theme_override_styles/normal = ExtResource("3_x262b")
 text = "Quit"
+
+[connection signal="pressed" from="VBoxContainer/Button (Settings)" to="." method="_on_button_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button (Quit)" to="." method="_on_button_quit_pressed"]
