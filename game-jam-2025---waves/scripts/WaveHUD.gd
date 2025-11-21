@@ -9,6 +9,9 @@ extends CanvasLayer
 @onready var jump_label: Label      = $JumpLabel
 @onready var boost_label: Label     = $BoostLabel
 @onready var wrong_way_label: Label = $WrongWayLabel
+@onready var trickLabel := $TrickLabel
+
+
 
 var _wave_timer:  float = 0.0
 var _jump_timer:  float = 0.0
@@ -79,3 +82,6 @@ func set_wrong_way(enabled: bool) -> void:
 	wrong_way_label.visible = enabled
 	if enabled:
 		wrong_way_label.text = "WRONG WAY"
+
+func updateTrickScore(points):
+	trickLabel.text = str(points)

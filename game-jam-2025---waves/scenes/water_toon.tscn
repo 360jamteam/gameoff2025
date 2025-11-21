@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
 [ext_resource type="Script" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
-[ext_resource type="Script" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
+[ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -213,3 +213,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.745098, 0, 0.85098, 1)
 theme_override_font_sizes/font_size = 40
+
+[node name="TrickLabel" type="Label" parent="WaveHUD"]
+offset_right = 40.0
+offset_bottom = 23.0

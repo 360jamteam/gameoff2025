@@ -4,11 +4,10 @@ extends Camera3D
 @export var followOffset := Vector3(0, 15, -25)
 @onready var boat := get_node_or_null("../Boat")
 
-
 #duration of cinematic
 @export var duration = 3.0
 var elapsed = 0.0
-	
+
 #final cam position
 var finalCamPos = Vector3.ZERO
 #starting height of cam
@@ -36,11 +35,18 @@ func _physics_process(delta):
 		followBoat(delta)
 
 
+
 func followBoat(delta):
-	#get position behind the boat
-	var targetPos = boat.global_transform.origin + boat.global_transform.basis * followOffset
+	#get yaw basis so camera does not flip with boat
+	var boatRotation = boat.global_rotation
+	var yawOnly = Basis().rotated(Vector3.UP, boatRotation.y)
+
+	#get position behind the boat (using yaw only)
+	var targetPos = boat.global_transform.origin + yawOnly * followOffset
+
 	#move camera to target lerp for smooth
 	position = position.lerp(targetPos, followSpeed * delta)
+
 	#make camera look at the boat
 	look_at(boat.global_position, Vector3.UP)
 

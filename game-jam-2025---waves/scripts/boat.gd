@@ -14,13 +14,12 @@ extends RigidBody3D
 @export var boostMod := 2.0
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 1200.0  
-@export var jumpSpeed := 70.0
+@export var jumpSpeed := 700.0
 
 #trick settings
 var totalScore := 0
 var touchingWater := true
-var lastRotation := Vector3.ZERO
-var totalSpins := Vector3.ZERO
+var totalSpinsDegrees := Vector3.ZERO
 var spinThreshold := 360.0
 var spinPoints := 100
 @onready var scoreLabel: RichTextLabel = get_node_or_null("../CanvasLayer/ScoreLabel")
@@ -59,9 +58,6 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
-	
-	#start tracking rotation for tricks
-	lastRotation = transform.basis.get_euler()
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
@@ -170,42 +166,43 @@ func recoverBoat():
 
 
 func crazyAssTricks():
-	#get current rotation in degrees
-	var currentRotation = transform.basis.get_euler()
-	#rotation delta
-	var rotationDelta = currentRotation - lastRotation
-	#handle  of over 180 degrees
-	for i in range(3):
-		if rotationDelta[i] > PI:
-			rotationDelta[i] -= TAU
-		elif rotationDelta[i] < -PI:
-			rotationDelta[i] += TAU
+	# Use angular velocity (radians/sec) which is reliable and continuous
+	# Convert to local space so flips/spins are tracked relative to the boat
+	var local_angular_vel = global_transform.basis.inverse() * angular_velocity
 	
-	#add to total spins
-	totalSpins += rotationDelta * (180.0 / PI)
+	# Get the physics timestep
+	var delta = get_physics_process_delta_time()
 	
-	#update last rotation
-	lastRotation = currentRotation
+	# Accumulate rotation in degrees
+	# X = pitch (front/back flip)
+	# Y = yaw (horizontal spin)  
+	# Z = roll (barrel roll)
+	totalSpinsDegrees += local_angular_vel * delta * (180.0 / PI)
 
 
 func checkTrickLanding():
 	#calculate completed spins on each axis
-	var xSpins = int(abs(totalSpins.x) / spinThreshold)
-	var ySpins = int(abs(totalSpins.y) / spinThreshold)
-	var zSpins = int(abs(totalSpins.z) / spinThreshold)
+	var xSpins = int(abs(totalSpinsDegrees.x) / spinThreshold)
+	var ySpins = int(abs(totalSpinsDegrees.y) / spinThreshold)
+	var zSpins = int(abs(totalSpinsDegrees.z) / spinThreshold)
+	
+	#check if boat is upright
+	var currentUp = global_transform.basis.y
+	#some tolerance in angle
+	var upright = currentUp.dot(Vector3.UP) > 0.7 
 	
 	#check if trick was landed by seeing if boat is upright and touching water
-	if touchingWater and abs(totalSpins.x) < 45 and abs(totalSpins.z) < 45:
+	if touchingWater and upright:
 		#trick landed successfully
 		if xSpins > 0 or ySpins > 0 or zSpins > 0:
 			print("Holy Gnarly Trick landed! Total spins - X: ", xSpins, " Y: ", ySpins, " Z: ", zSpins)
 			calcPoints(xSpins, ySpins, zSpins)
-		totalSpins = Vector3.ZERO
+		totalSpinsDegrees = Vector3.ZERO
 	elif touchingWater:
 		#failed trick reset
 		if xSpins > 0 or ySpins > 0 or zSpins > 0:
 			print("totally buggered that one")
-		totalSpins = Vector3.ZERO
+		totalSpinsDegrees = Vector3.ZERO
 
 
 func calcPoints(xSpins: int, ySpins: int, zSpins: int):
@@ -233,6 +230,7 @@ func calcPoints(xSpins: int, ySpins: int, zSpins: int):
 	
 	totalScore += points
 	print("Points earned: ", points, " | Total score: ", totalScore)
+	wave_hud.call("updateTrickScore", totalScore)
 	
 
 
