@@ -73,15 +73,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# WRONG WAY detection (uses physics step delta + velocity)
 	update_wrong_way(state.get_step(), state)
 
-
 func handleControls():
-	#movement options:
+	# movement options:
 	if Input.is_action_pressed("left"):
 		apply_torque_impulse(transform.basis.y * turnSpeed)
+
 	if Input.is_action_pressed("right"):
 		apply_torque_impulse(transform.basis.y * -turnSpeed)
-	
-	# --- HUD messages (these only fire on the first press) ---
+
+	# --- HUD messages (these only fire on first press) ---
+
+	# FORWARD (W)
 	if Input.is_action_just_pressed("forward"):
 		if wave_hud and wave_hud.has_method("show_wave_message"):
 			wave_hud.call(
@@ -89,7 +91,9 @@ func handleControls():
 				"ACCELERATE (W)",
 				Color(0.6, 1.0, 0.6)
 			)
+		totalScore += 1
 
+	# JUMP (SPACE)
 	if Input.is_action_just_pressed("jump"):
 		if wave_hud and wave_hud.has_method("show_jump_message"):
 			wave_hud.call(
@@ -97,7 +101,9 @@ func handleControls():
 				"JUMP (SPACE)",
 				Color(1.0, 0.8, 0.4)
 			)
-	
+		totalScore += 5
+
+	# BOOST (SHIFT)
 	if Input.is_action_just_pressed("boost"):
 		if wave_hud and wave_hud.has_method("show_boost_message"):
 			wave_hud.call(
@@ -105,33 +111,38 @@ func handleControls():
 				"BOOST (SHIFT)",
 				Color(0.6, 0.8, 1.0)
 			)
+		totalScore += 3
+
 	# --------------------------------------------------------
 
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
-			
+
 		if Input.is_action_pressed("backward"):
 			apply_central_force(-transform.basis.z * moveSpeed)
-			
+
 		if Input.is_action_pressed("boost"):
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
-			
+
 		if Input.is_action_pressed("jump"):
 			apply_central_impulse(Vector3.UP * jumpSpeed)
-		
-	#tricks
+
+	# tricks
 	if Input.is_action_pressed("uarrow"):
 		apply_torque_impulse(transform.basis.x * turnSpeed)
+
 	if Input.is_action_pressed("darrow"):
 		apply_torque_impulse(-transform.basis.x * turnSpeed)
+
 	if Input.is_action_pressed("rarrow"):
 		apply_torque_impulse(transform.basis.z * -turnSpeed)
+
 	if Input.is_action_pressed("larrow"):
 		apply_torque_impulse(transform.basis.z * turnSpeed)
+
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
-
 
 func makeItFloat():
 	submerged = false
