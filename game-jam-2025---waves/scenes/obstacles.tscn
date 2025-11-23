@@ -26,10 +26,13 @@ mesh = ExtResource("2_2fc1n")
 surface_material_override/0 = SubResource("StandardMaterial3D_6tpbi")
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 [node name="squid" type="Area3D" parent="Squid"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Squid/squid"]
 =======
+=======
+>>>>>>> Stashed changes
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["squid"]]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.634796, 0.296744, -0.491875)
 shape = SubResource("CapsuleShape3D_rw70g")

@@ -4,8 +4,11 @@
 extends RigidBody3D
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 @export var float_force := 1.5
 =======
+=======
+>>>>>>> Stashed changes
 var ink_overlay: TextureRect
 @export var float_force := 11.5
 >>>>>>> Stashed changes
@@ -202,4 +205,7 @@ func _on_ink_timeout() -> void:
 	for child in get_children():
 		if child is Timer:
 			child.queue_free()
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

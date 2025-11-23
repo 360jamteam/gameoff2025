@@ -131,6 +131,7 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	#mesh_instance.visible = false
 	
 <<<<<<< Updated upstream:game-jam-2025---waves/scripts/buoySpawner.gd
+<<<<<<< Updated upstream:game-jam-2025---waves/scripts/buoySpawner.gd
 	# make it kinda see through for debug
 	var material = StandardMaterial3D.new()
 	material.albedo_color = Color(1, 0, 0, 0.3) 
@@ -138,6 +139,8 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	mesh_instance.material_override = material
 
+=======
+>>>>>>> Stashed changes:game-jam-2025---waves/scripts/trackPathSpawner.gd
 =======
 >>>>>>> Stashed changes:game-jam-2025---waves/scripts/trackPathSpawner.gd
 	# create collision shape from mesh

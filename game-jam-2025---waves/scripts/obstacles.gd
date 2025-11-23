@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 extends MeshInstance3D
 
 @export var move_distance: float = 15.0     # how far left-right it moves
@@ -9,6 +10,10 @@ var t := 0.0
 =======
 extends StaticBody3D
 
+=======
+extends StaticBody3D
+
+>>>>>>> Stashed changes
 @export var move_distance_local: float = 130.0    # desired side-to-side movement
 @export var base_move_speed: float = 1.0          # average swing speed
 @export var margin_from_wall: float = 2.0        # how far to stay away from walls
@@ -45,6 +50,22 @@ func setup(start_pos: Vector3, right_dir: Vector3, track_half_width: float) -> v
 
 	max_distance = min(move_distance_local, max(0.0, track_half_width - margin_from_wall))
 >>>>>>> Stashed changes
+
+	rng.randomize()
+	phase_offset = rng.randf_range(0.0, PI * 2.0)
+
+	var speed_factor: float = rng.randf_range(0.7, 1.3)
+	move_speed_actual = base_move_speed * speed_factor
+	spin_speed_actual = base_spin_speed_deg * speed_factor
+	direction = 1.0 if rng.randi_range(0, 1) == 0 else -1.0
+
+	jump_timer = 0.0
+	next_jump_time = rng.randf_range(jump_interval_min, jump_interval_max)
+	is_jumping = false
+	jump_t = 0.0
+	vertical_offset = 0.0
+	global_position = base_position
+
 
 	rng.randomize()
 	phase_offset = rng.randf_range(0.0, PI * 2.0)
@@ -105,4 +126,7 @@ func _update_jump(delta: float) -> void:
 			vertical_offset = 0.0
 		else:
 			vertical_offset = sin(phase * PI) * jump_height
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
