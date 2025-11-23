@@ -16,15 +16,15 @@ albedo_texture = ExtResource("3_jei10")
 radius = 0.75
 height = 3.0
 
-[node name="Obstacles" type="StaticBody3D"]
+[node name="Obstacles" type="StaticBody3D" groups=["squid"]]
 physics_material_override = SubResource("PhysicsMaterial_rw70g")
 script = ExtResource("1_rw70g")
 
-[node name="Squid" type="MeshInstance3D" parent="."]
+[node name="Squid" type="MeshInstance3D" parent="." groups=["squid"]]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.634796, 7.27755, 0)
 mesh = ExtResource("2_2fc1n")
 surface_material_override/0 = SubResource("StandardMaterial3D_6tpbi")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["squid"]]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.634796, 0.296744, -0.491875)
 shape = SubResource("CapsuleShape3D_rw70g")

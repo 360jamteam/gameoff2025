@@ -9,6 +9,7 @@ extends CanvasLayer
 @onready var jump_label: Label      = $JumpLabel
 @onready var boost_label: Label     = $BoostLabel
 @onready var wrong_way_label: Label = $WrongWayLabel
+@onready var ink_overlay: TextureRect = $InkOverlay
 
 var _wave_timer:  float = 0.0
 var _jump_timer:  float = 0.0

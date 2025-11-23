@@ -5,6 +5,7 @@
 
 extends RigidBody3D
 
+var ink_overlay: TextureRect
 @export var float_force := 11.5
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
@@ -32,6 +33,7 @@ var waveTorque := 1.0
 @export var wrong_way_time_threshold := 0.5
 @export var wave_hud_path: NodePath
 
+
 var track: Path3D
 var wrong_way_timer := 0.0
 var wave_hud: CanvasLayer
@@ -56,7 +58,32 @@ func _ready():
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
+		if wave_hud:
+			ink_overlay = wave_hud.get_node_or_null("InkOverlay") as TextureRect
+			if ink_overlay:
+				print("Ink overlay found in WaveHUD")
+			else:
+				print("ERROR: Ink overlay NOT found in WaveHUD")
 
+	contact_monitor = true
+	max_contacts_reported = 8
+
+	# Boat collision setup
+	collision_layer = 1          # boat layer
+	collision_mask = 1 | 2       # detect boat (1) + squids (2)
+	body_entered.connect(_on_body_entered)
+	add_to_group("boat")
+	
+	print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
+
+func _on_body_entered(body: Node3D) -> void:
+	print("Boat collided with: ", body.name)
+	print("Body class: ", body.get_class())
+	print("Is in squid group: ", body.is_in_group("squid"))
+	
+	if body.is_in_group("squid"):
+		print("*** SQUID COLLISION DETECTED! ***")
+		show_ink(3.0)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
@@ -191,3 +218,27 @@ func handleWaveCollision() -> void:
 	var waveMultiplier = clamp(boatSpeed / 100.0, 0.7, 5.0)
 	apply_central_impulse(-transform.basis.z * waveForce * waveMultiplier * 2.0)
 	apply_torque_impulse(transform.basis.y * waveTorque * waveMultiplier)
+
+func show_ink(duration: float = 3.0) -> void:
+	if ink_overlay == null:
+		print("show_ink: ink_overlay is NULL")
+		return
+
+	print("show_ink: showing ink for ", duration, " seconds")
+	ink_overlay.visible = true
+
+	var timer = Timer.new()
+	timer.wait_time = duration
+	timer.one_shot = true
+	timer.timeout.connect(_on_ink_timeout)
+	add_child(timer)
+	timer.start()
+
+func _on_ink_timeout() -> void:
+	if ink_overlay:
+		ink_overlay.visible = false
+	
+	# Remove the timer
+	for child in get_children():
+		if child is Timer:
+			child.queue_free()
