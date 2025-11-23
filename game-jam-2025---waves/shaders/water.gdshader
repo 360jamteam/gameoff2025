@@ -7,38 +7,22 @@ render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_s
 // After which I added in some fractal Brownian motion
 // as well as vertex displacement
 
-uniform vec4 WATER_COL  = vec4(0.04, 0.38, 0.88, 1.0);
-uniform vec4 WATER2_COL = vec4(0.04, 0.35, 0.78, 1.0);
-uniform vec4 FOAM_COL   = vec4(0.8125, 0.9609, 0.9648, 1.0);
-
+uniform vec4 WATER_COL =  vec4(0.04, 0.38, 0.88, 1.0);
+uniform vec4 WATER2_COL =  vec4(0.04, 0.35, 0.78, 1.0);
+uniform vec4 FOAM_COL = vec4(0.8125, 0.9609, 0.9648, 1.0);
 uniform float distortion_speed = 2.0;
-uniform vec2  tile             = vec2(50.0, 50.0);
-
-// Base wave controls (for Nicole's script)
-uniform float height     = 2.0;
-uniform vec2  wave_size  = vec2(2.0, 2.0);
+uniform vec2 tile = vec2(50.0, 50.0);
+uniform float height = 2.0;
+uniform vec2 wave_size = vec2(2.0, 2.0);
 uniform float wave_speed = 1.5;
 
 const float M_2PI = 6.283185307;
 const float M_6PI = 18.84955592;
 
-// ---- Nicole's spawned waves (synced with water.gd) ----
-const int MAX_SPAWNED_WAVES = 32;
-
-uniform int   spawned_wave_count;
-uniform vec2  spawned_wave_centers[MAX_SPAWNED_WAVES];
-uniform float spawned_wave_times[MAX_SPAWNED_WAVES];
-uniform float spawned_wave_radius;
-uniform float spawned_wave_height;
-uniform float spawned_wave_lifetime;
-// -------------------------------------------------------
-
-// ------- Sho's original shader code below -------
-
 float random(vec2 uv) {
     return fract(sin(dot(uv.xy,
-        vec2(12.9898, 78.233))) *
-        43758.5453123);
+        vec2(12.9898,78.233))) *
+            43758.5453123);
 }
 
 float noise(vec2 uv) {
@@ -54,25 +38,26 @@ float noise(vec2 uv) {
     vec2 blur = smoothstep(0.0, 1.0, uv_fract);
 
     return mix(a, b, blur.x) +
-        (c - a) * blur.y * (1.0 - blur.x) +
-        (d - b) * blur.x * blur.y;
+            (c - a) * blur.y * (1.0 - blur.x) +
+            (d - b) * blur.x * blur.y;
 }
 
 float fbm(vec2 uv) {
-    int octaves    = 6;
+    int octaves = 6;
     float amplitude = 0.5;
     float frequency = 3.0;
-    float value     = 0.0;
+	float value = 0.0;
 
-    for (int i = 0; i < octaves; i++) {
-        value     += amplitude * noise(frequency * uv);
+    for(int i = 0; i < octaves; i++) {
+        value += amplitude * noise(frequency * uv);
         amplitude *= 0.5;
         frequency *= 2.0;
     }
     return value;
 }
 
-float circ(vec2 pos, vec2 c, float s) {
+float circ(vec2 pos, vec2 c, float s)
+{
     c = abs(pos - c);
     c = min(c, 1.0 - c);
 
@@ -80,7 +65,8 @@ float circ(vec2 pos, vec2 c, float s) {
 }
 
 // Foam pattern for the water constructed out of a series of circles
-float waterlayer(vec2 uv) {
+float waterlayer(vec2 uv)
+{
     uv = mod(uv, 1.0); // Clamp to [0..1]
 
     float ret = 1.0;
@@ -159,54 +145,56 @@ float waterlayer(vec2 uv) {
     ret += circ(uv, vec2(0.987324, 0.146545), 0.0288391);
     ret += circ(uv, vec2(0.222646, 0.251694), 0.00092276);
     ret += circ(uv, vec2(0.159826, 0.528063), 0.00605293);
-    return max(ret, 0.0);
+	return max(ret, 0.0);
 }
 
 // Procedural texture generation for the water
-vec3 water(vec2 uv, vec3 cdir, float iTime) {
+vec3 water(vec2 uv, vec3 cdir, float iTime)
+{
     uv *= vec2(0.25);
-    uv += fbm(uv) * 0.2;
+	uv += fbm(uv) * 0.2;
 
     // Parallax height distortion with two directional waves at
     // slightly different angles.
     vec2 a = 0.025 * cdir.xz / cdir.y; // Parallax offset
-    float h = sin(uv.x + iTime);       // Height at UV
+    float h = sin(uv.x + iTime); // Height at UV
     uv += a * h;
-    h  = sin(0.841471 * uv.x - 0.540302 * uv.y + iTime);
+    h = sin(0.841471 * uv.x - 0.540302 * uv.y + iTime);
     uv += a * h;
 
     // Texture distortion
     float d1 = mod(uv.x + uv.y, M_2PI);
     float d2 = mod((uv.x + uv.y + 0.25) * 1.3, M_6PI);
     d1 = iTime * 0.07 + d1;
-    d2 = iTime * 0.5  + d2;
+    d2 = iTime * 0.5 + d2;
     vec2 dist = vec2(
-        sin(d1) * 0.15 + sin(d2) * 0.05,
-        cos(d1) * 0.15 + cos(d2) * 0.05
+    	sin(d1) * 0.15 + sin(d2) * 0.05,
+    	cos(d1) * 0.15 + cos(d2) * 0.05
     );
 
     vec3 ret = mix(WATER_COL.rgb, WATER2_COL.rgb, waterlayer(uv + dist.xy));
-    ret      = mix(ret, FOAM_COL.rgb, waterlayer(vec2(1.0) - uv - dist.yx));
+    ret = mix(ret, FOAM_COL.rgb, waterlayer(vec2(1.0) - uv - dist.yx));
     return ret;
 }
 
-void vertex() {
-    float time = TIME * wave_speed;
-    vec2 uv    = UV * wave_size;
 
-    float d1 = mod(uv.x + uv.y, M_2PI);
+void vertex(){
+	float time = TIME * wave_speed;
+	vec2 uv = UV * wave_size;
+	float d1 = mod(uv.x + uv.y, M_2PI);
     float d2 = mod((uv.x + uv.y + 0.25) * 1.3, M_6PI);
     d1 = time * 0.07 + d1;
-    d2 = time * 0.5  + d2;
+    d2 = time * 0.5 + d2;
     vec2 dist = vec2(
-        sin(d1) * 0.15 + sin(d2) * 0.05,
-        cos(d1) * 0.15 + cos(d2) * 0.05
+    	sin(d1) * 0.15 + sin(d2) * 0.05,
+    	cos(d1) * 0.15 + cos(d2) * 0.05
     );
-
-    VERTEX.y += dist.y * height;
+	VERTEX.y += dist.y * height;
 }
 
-void fragment() {
-    vec2 uv = UV;
-    ALBEDO = water(uv * tile, vec3(0, 1, 0), TIME * distortion_speed);
+void fragment()
+{
+	vec2 uv = UV;
+
+    ALBEDO = vec3(water(uv * tile, vec3(0,1,0), TIME * distortion_speed));
 }
