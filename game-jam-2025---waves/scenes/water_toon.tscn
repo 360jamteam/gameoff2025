@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://scripts/progress_bar.gd" id="19_dap1e"]
 [ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="19_mnr2h"]
 [ext_resource type="Script" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
+[ext_resource type="FontFile" uid="uid://ccy6dltko5gt5" path="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf" id="11_wyvur"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")
@@ -300,6 +301,8 @@ script = ExtResource("19_dap1e")
 [node name="GameOverPanel" type="Control" parent="UI" groups=["game_over_ui"]]
 visible = false
 layout_mode = 3
+
+[node name="CountdownLabel" type="Label" parent="WaveHUD"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -331,3 +334,14 @@ vertical_alignment = 1
 layout_mode = 2
 action_mode = 0
 text = "RESTART"
+
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("11_wyvur")
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
