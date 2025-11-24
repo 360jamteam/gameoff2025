@@ -32,6 +32,7 @@ var waveTorque := 1.0
 # countdown / control lock
 var can_control := false
 var countdown := 10.0   # seconds
+var countdown_done := false
 
 # WRONG WAY settings
 @export var track_path: NodePath
@@ -109,32 +110,40 @@ func _on_body_entered(body: Node3D) -> void:
 	print("Is in squid group: ", body.is_in_group("squid"))
 	
 	if collision_sound:
-			collision_sound.stop()
-			collision_sound.play()
+		collision_sound.stop()
+		collision_sound.play()
 			
 	if body.is_in_group("squid"):
 		print("*** SQUID COLLISION DETECTED! ***")
 		show_ink(3.0)
 		
-	if health_bar:
-		health_bar.apply_damage(20)
+		# soften the hit so the boat doesn't spin forever
+		angular_velocity = Vector3.ZERO
+		linear_velocity *= 0.5
+
+		# nudge the boat back upright
+		recoverBoat()
 		
-	can_control = false
-	countdown = 10.0
+		# small damage 
+		if health_bar:
+			health_bar.apply_damage(10)
+	else:
+		# other collisions can still do normal damage if you want
+		if health_bar:
+			health_bar.apply_damage(20)
 	
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# countdown at start (blocks player control) 
-	if countdown > -1.0:
-		countdown -= state.get_step()
+	# Always tick countdown and always tell HUD, so it can hide itself.
+	countdown -= state.get_step()
 
-		# tell the HUD what to show
-		if wave_hud and wave_hud.has_method("update_countdown"):
-			wave_hud.call("update_countdown", countdown)
+	if wave_hud and wave_hud.has_method("update_countdown"):
+		wave_hud.call("update_countdown", countdown)
 
-		# turn controls on once timer finishes
-		if countdown <= 0.0 and not can_control:
-			can_control = true
-
+	# Turn controls on once, when timer finishes
+	if not countdown_done and countdown <= 0.0:
+		countdown_done = true
+		can_control = true
 
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
@@ -159,6 +168,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 	# WRONG WAY logic always runs
 	update_wrong_way(state.get_step(), state)
+
 
 func handleControls():
 	# steering
