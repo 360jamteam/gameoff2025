@@ -25,6 +25,11 @@ settings/stdout/print_gpu_profile=true
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 
+[global_group]
+
+squid=""
+game_over_ui=""
+
 [input]
 
 forward={
