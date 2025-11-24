@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=35 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
@@ -17,9 +17,6 @@
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
 [ext_resource type="AudioStream" uid="uid://pyk73n7nq16j" path="res://assets/audio/background_music.ogg" id="16_smnpv"]
-[ext_resource type="Script" uid="uid://b1htjthqubuv1" path="res://scripts/progress_bar.gd" id="19_dap1e"]
-[ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="19_mnr2h"]
-[ext_resource type="Script" uid="uid://de678x25eyfbk" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")
@@ -129,9 +126,6 @@ proximity_fade_distance = 2.0
 [sub_resource type="QuadMesh" id="QuadMesh_k80b6"]
 material = SubResource("StandardMaterial3D_n74q2")
 
-[sub_resource type="LabelSettings" id="LabelSettings_dap1e"]
-font_size = 130
-
 [node name="Node3D" type="Node3D"]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
@@ -202,10 +196,6 @@ trail_enabled = true
 trail_lifetime = 1.78
 process_material = SubResource("ParticleProcessMaterial_as4el")
 draw_pass_1 = SubResource("QuadMesh_k80b6")
-
-[node name="CollisionSound" type="AudioStreamPlayer" parent="Boat"]
-unique_name_in_owner = true
-stream = ExtResource("19_mnr2h")
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
 
@@ -285,49 +275,3 @@ stream = ExtResource("15_xqjy6")
 volume_db = -6.0
 autoplay = true
 parameters/looping = true
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="HealthBar" type="ProgressBar" parent="UI"]
-unique_name_in_owner = true
-offset_left = 17.0
-offset_top = 12.0
-offset_right = 314.0
-offset_bottom = 61.0
-value = 100.0
-script = ExtResource("19_dap1e")
-
-[node name="GameOverPanel" type="Control" parent="UI" groups=["game_over_ui"]]
-visible = false
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("20_dap1e")
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/GameOverPanel"]
-layout_mode = 0
-offset_left = -354.0
-offset_top = -168.0
-offset_right = 392.0
-offset_bottom = 45.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/GameOverPanel/CenterContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="GameoverLabel" type="Label" parent="UI/GameOverPanel/CenterContainer/VBoxContainer" groups=["game_over_ui"]]
-layout_mode = 2
-text = "GAME OVER"
-label_settings = SubResource("LabelSettings_dap1e")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RestartButton" type="Button" parent="UI/GameOverPanel/CenterContainer/VBoxContainer" groups=["game_over_ui"]]
-layout_mode = 2
-action_mode = 0
-text = "RESTART"

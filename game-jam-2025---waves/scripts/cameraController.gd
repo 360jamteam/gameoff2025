@@ -2,7 +2,7 @@ extends Camera3D
 
 @export var followSpeed := 5.0
 @export var followOffset := Vector3(0, 15, -25)
-@onready var boat := get_node_or_null("../Boat")
+@onready var boat := get_node_or_null("../../../Boat")
 
 
 #duration of cinematic

@@ -5,18 +5,21 @@
 
 extends RigidBody3D
 
+#ink
+var ink_overlay: TextureRect
 @export var float_force := 11.5
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
 
-#movement settings
+# movement settings
 @export var moveSpeed := 1700.0
 @export var boostMod := 2.0
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 1200.0  
 @export var jumpSpeed := 70.0
+@onready var collision_sound: AudioStreamPlayer = $CollisionSound
 
-#trick settings
+# trick settings
 var totalScore = 0.0
 var touchingWater = true
 var trickAngles = [180, 360, 720, 1080]
@@ -28,13 +31,16 @@ var waveTorque := 1.0
 
 # WRONG WAY settings
 @export var track_path: NodePath
-@export var wrong_way_speed_min := 5.0        # don't warn if crawling
-@export var wrong_way_time_threshold := 0.5   # seconds of going wrong way before showing text
+@export var wrong_way_speed_min := 5.0
+@export var wrong_way_time_threshold := 0.5
 @export var wave_hud_path: NodePath
+
+
 var track: Path3D
 var wrong_way_timer := 0.0
 var wave_hud: CanvasLayer
 
+@onready var health_bar = %HealthBar
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water/WaterMesh"
 
@@ -43,34 +49,85 @@ var submerged := false
 
 func _ready():
 	water = get_node(water_path)
-	
+		
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
 		return
-	
+		
 	# path the boat follows (for WRONG WAY logic)
 	if track_path != NodePath():
 		track = get_node_or_null(track_path) as Path3D
+		
+	if health_bar and health_bar.has_signal("died"):
+		health_bar.died.connect(_on_player_died)
 	
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
+		if wave_hud:
+			ink_overlay = wave_hud.get_node_or_null("InkOverlay") as TextureRect
+			if ink_overlay:
+				print("Ink overlay found in WaveHUD")
+			else:
+				print("ERROR: Ink overlay NOT found in WaveHUD")
+	contact_monitor = true
+	max_contacts_reported = 8
 
+	# Boat collision setup
+	collision_layer = 1          # boat layer
+	collision_mask = 1 | 2       # detect boat (1) + squids (2)
+	body_entered.connect(_on_body_entered)
+	add_to_group("boat")
+	
+	print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
+
+func _on_player_died() -> void:
+	_on_ink_timeout()
+	print("GAME OVER")
+
+	# stop movement
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	set_physics_process(false)
+	set_process(false)
+
+	# pause game
+	get_tree().paused = true
+
+	# show Game Over UI
+	var game_over_ui := get_tree().get_first_node_in_group("game_over_ui")
+	if game_over_ui:
+		game_over_ui.show_game_over()
+
+func _on_body_entered(body: Node3D) -> void:
+	print("Boat collided with: ", body.name)
+	print("Body class: ", body.get_class())
+	print("Is in squid group: ", body.is_in_group("squid"))
+	
+	if collision_sound:
+			collision_sound.stop()
+			collision_sound.play()
+			
+	if body.is_in_group("squid"):
+		print("*** SQUID COLLISION DETECTED! ***")
+		show_ink(3.0)
+		
+	if health_bar:
+		health_bar.apply_damage(20)
+		
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
 	
-	#when not doing tricks, 
+	# when not doing tricks, auto-upright
 	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
 		recoverBoat()
 		
 	handleControls()
 	makeItFloat()
 	handleWaveCollision()
-	
-	# WRONG WAY detection (uses physics step delta + velocity)
 	update_wrong_way(state.get_step(), state)
 
 func handleControls():
@@ -115,6 +172,7 @@ func handleControls():
 
 	# --------------------------------------------------------
 
+	# thrust / jumping
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
@@ -153,14 +211,11 @@ func makeItFloat():
 	if depth > 0:
 		submerged = true
 		apply_force(Vector3.UP * float_force * gravity * depth)
-	
+
 
 func recoverBoat():
-	# get up direction for boat
 	var current_up = global_transform.basis.y
-	# calc how much to rotate boat to get to actual up
 	var correction_axis = current_up.cross(Vector3.UP)
-	# apply recovery torque
 	apply_torque(correction_axis * recoverSpeed)
 
 
@@ -171,7 +226,6 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	var velocity: Vector3 = state.linear_velocity
 	var speed := velocity.length()
 	
-	# if we're barely moving, don't warn
 	if speed < wrong_way_speed_min:
 		wrong_way_timer = 0.0
 		if wave_hud and wave_hud.has_method("set_wrong_way"):
@@ -182,13 +236,9 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if curve == null or curve.get_point_count() < 2:
 		return
 	
-	# 1) where is the boat in track local space?
 	var local_pos: Vector3 = track.to_local(global_transform.origin)
-	
-	# 2) find closest offset on the curve
 	var offset := curve.get_closest_offset(local_pos)
 	
-	# 3) sample a little behind and ahead to get the path tangent
 	var sample_dist := 3.0
 	var behind_offset := offset - sample_dist * 0.5
 	var ahead_offset  := offset + sample_dist * 0.5
@@ -201,8 +251,6 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	
 	var track_dir := (ahead_world - behind_world).normalized()
 	var vel_dir := velocity.normalized()
-	
-	# dot < 0 means mostly opposite direction
 	var dot := vel_dir.dot(track_dir)
 	
 	if dot < -0.2:
@@ -212,7 +260,6 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	
 	var is_wrong := wrong_way_timer >= wrong_way_time_threshold
 
-	# let WaveHUD decide what to do with the label
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
 
@@ -221,17 +268,12 @@ func crazyAssTricks():
 	var boat = get_node_or_null("../Boat")
 	if touchingWater == false:
 		var yes = 0
-	#fill out later with when not touching water, track the angles rotated
-	#maybe use an array of angles, [180, 360, 720, 1080], and more 
-	#set flags when angle passses x amount
-	#add scores based on tricks, with multiplier based on tricks within a timer that starts after landing first trick
-	#then add to total score
-	
+	# TODO: trick system
+
 
 func setInWave() -> void:
 	inWave = true
 	
-
 func setNotInWave() -> void:
 	inWave = false
 
@@ -239,11 +281,32 @@ func setNotInWave() -> void:
 func handleWaveCollision() -> void:
 	if not inWave:
 		return
-	# get boat speed
+	
 	var boatSpeed = linear_velocity.length()
-	# get force multipler based on boatspeed
 	var waveMultiplier = clamp(boatSpeed / 100.0, 0.7, 5.0)
-	#push boat back
-	apply_central_impulse(-transform.basis.z * waveForce * waveMultiplier * 2)
-	#spin boat
+	apply_central_impulse(-transform.basis.z * waveForce * waveMultiplier * 2.0)
 	apply_torque_impulse(transform.basis.y * waveTorque * waveMultiplier)
+
+func show_ink(duration: float = 3.0) -> void:
+	if ink_overlay == null:
+		print("show_ink: ink_overlay is NULL")
+		return
+
+	print("show_ink: showing ink for ", duration, " seconds")
+	ink_overlay.visible = true
+
+	var timer = Timer.new()
+	timer.wait_time = duration
+	timer.one_shot = true
+	timer.timeout.connect(_on_ink_timeout)
+	add_child(timer)
+	timer.start()
+
+func _on_ink_timeout() -> void:
+	if ink_overlay:
+		ink_overlay.visible = false
+	
+	# Remove the timer
+	for child in get_children():
+		if child is Timer:
+			child.queue_free()
