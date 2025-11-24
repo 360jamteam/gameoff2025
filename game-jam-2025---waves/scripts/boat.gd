@@ -5,6 +5,7 @@
 
 extends RigidBody3D
 
+#ink
 var ink_overlay: TextureRect
 @export var float_force := 11.5
 @export var water_drag := 0.05
@@ -16,6 +17,7 @@ var ink_overlay: TextureRect
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 1200.0  
 @export var jumpSpeed := 70.0
+@onready var collision_sound: AudioStreamPlayer = $CollisionSound
 
 # trick settings
 var totalScore = 0.0
@@ -38,6 +40,7 @@ var track: Path3D
 var wrong_way_timer := 0.0
 var wave_hud: CanvasLayer
 
+@onready var health_bar = %HealthBar
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water_path : NodePath = "../Water/WaterMesh"
 
@@ -46,14 +49,17 @@ var submerged := false
 
 func _ready():
 	water = get_node(water_path)
-	
+		
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
 		return
-	
+		
 	# path the boat follows (for WRONG WAY logic)
 	if track_path != NodePath():
 		track = get_node_or_null(track_path) as Path3D
+		
+	if health_bar and health_bar.has_signal("died"):
+		health_bar.died.connect(_on_player_died)
 	
 	# Wave HUD (handles WAVE / JUMP / BOOST messages + WRONG WAY label)
 	if wave_hud_path != NodePath():
@@ -64,7 +70,6 @@ func _ready():
 				print("Ink overlay found in WaveHUD")
 			else:
 				print("ERROR: Ink overlay NOT found in WaveHUD")
-
 	contact_monitor = true
 	max_contacts_reported = 8
 
@@ -76,14 +81,40 @@ func _ready():
 	
 	print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
 
+func _on_player_died() -> void:
+	_on_ink_timeout()
+	print("GAME OVER")
+
+	# stop movement
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	set_physics_process(false)
+	set_process(false)
+
+	# pause game
+	get_tree().paused = true
+
+	# show Game Over UI
+	var game_over_ui := get_tree().get_first_node_in_group("game_over_ui")
+	if game_over_ui:
+		game_over_ui.show_game_over()
+
 func _on_body_entered(body: Node3D) -> void:
 	print("Boat collided with: ", body.name)
 	print("Body class: ", body.get_class())
 	print("Is in squid group: ", body.is_in_group("squid"))
 	
+	if collision_sound:
+			collision_sound.stop()
+			collision_sound.play()
+			
 	if body.is_in_group("squid"):
 		print("*** SQUID COLLISION DETECTED! ***")
 		show_ink(3.0)
+		
+	if health_bar:
+		health_bar.apply_damage(20)
+		
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if submerged:
