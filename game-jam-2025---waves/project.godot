@@ -28,6 +28,7 @@ window/size/viewport_height=1080
 [global_group]
 
 squid=""
+game_over_ui=""
 
 [input]
 
