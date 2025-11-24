@@ -17,9 +17,9 @@
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
 [ext_resource type="AudioStream" uid="uid://pyk73n7nq16j" path="res://assets/audio/background_music.ogg" id="16_smnpv"]
-[ext_resource type="Script" uid="uid://b1htjthqubuv1" path="res://scripts/progress_bar.gd" id="19_dap1e"]
+[ext_resource type="Script" path="res://scripts/progress_bar.gd" id="19_dap1e"]
 [ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="19_mnr2h"]
-[ext_resource type="Script" uid="uid://de678x25eyfbk" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
+[ext_resource type="Script" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")

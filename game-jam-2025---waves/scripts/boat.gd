@@ -142,15 +142,18 @@ func handleControls():
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
+			totalScore += 1
 			
 		if Input.is_action_pressed("backward"):
 			apply_central_force(-transform.basis.z * moveSpeed)
 			
 		if Input.is_action_pressed("boost"):
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
+			totalScore += 3
 			
 		if Input.is_action_pressed("jump"):
 			apply_central_impulse(Vector3.UP * jumpSpeed)
+			totalScore += 5
 		
 	# tricks
 	if Input.is_action_pressed("uarrow"):
