@@ -1,7 +1,8 @@
-[gd_scene load_steps=40 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=41 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
+[ext_resource type="Script" uid="uid://c4uhc0tftvhox" path="res://scenes/water_toon_controller.gd" id="1_tse5i"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Texture2D" uid="uid://cl5tr4tynresr" path="res://assets/citrink-1x - Copy.png" id="2_wyvur"]
@@ -18,9 +19,9 @@
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
 [ext_resource type="AudioStream" uid="uid://pyk73n7nq16j" path="res://assets/audio/background_music.ogg" id="16_smnpv"]
-[ext_resource type="Script" path="res://scripts/progress_bar.gd" id="19_dap1e"]
+[ext_resource type="Script" uid="uid://b1htjthqubuv1" path="res://scripts/progress_bar.gd" id="19_dap1e"]
 [ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="19_mnr2h"]
-[ext_resource type="Script" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
+[ext_resource type="Script" uid="uid://de678x25eyfbk" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")
@@ -134,6 +135,7 @@ material = SubResource("StandardMaterial3D_n74q2")
 font_size = 130
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_tse5i")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 material = SubResource("ShaderMaterial_ywv5c")

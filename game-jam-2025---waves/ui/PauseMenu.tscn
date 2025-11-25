@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dceouyuqmjgbn"]
+[gd_scene load_steps=8 format=3 uid="uid://dceouyuqmjgbn"]
 
 [ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_1q10k"]
 [ext_resource type="Script" uid="uid://b2towxvssupt8" path="res://ui/pause_menu.gd" id="1_4dg4t"]
@@ -9,11 +9,10 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1q10k"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4dg4t"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ptdjk"]
 
 [node name="PauseMenu" type="Control"]
+process_mode = 2
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -55,15 +54,6 @@ theme_override_styles/pressed = ExtResource("2_4dg4t")
 theme_override_styles/normal = ExtResource("3_ptdjk")
 text = "Restart"
 
-[node name="Button (Settings)" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-theme_override_styles/focus = SubResource("StyleBoxEmpty_4dg4t")
-theme_override_styles/hover = ExtResource("1_1q10k")
-theme_override_styles/pressed = ExtResource("2_4dg4t")
-theme_override_styles/normal = ExtResource("3_ptdjk")
-text = "Settings"
-
 [node name="Button (Main Menu)" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -73,5 +63,6 @@ theme_override_styles/pressed = ExtResource("2_4dg4t")
 theme_override_styles/normal = ExtResource("3_ptdjk")
 text = "Main Menu"
 
-[connection signal="pressed" from="VBoxContainer/Button (Settings)" to="." method="_on_button_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button (Resume)" to="." method="_on_button_resume_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button (Restart)" to="." method="_on_button_restart_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button (Main Menu)" to="." method="_on_button_main_menu_pressed"]

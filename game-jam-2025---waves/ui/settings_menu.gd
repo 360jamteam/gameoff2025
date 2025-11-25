@@ -1,4 +1,4 @@
-class_name settings_menu
+class_name SettingsMenu
 extends Control
 
 static var previous_menu_path: String = ""
