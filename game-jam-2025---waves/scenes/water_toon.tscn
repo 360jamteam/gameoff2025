@@ -1,7 +1,8 @@
-[gd_scene load_steps=39 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=41 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
+[ext_resource type="Script" uid="uid://c4uhc0tftvhox" path="res://scenes/water_toon_controller.gd" id="1_tse5i"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Texture2D" uid="uid://cl5tr4tynresr" path="res://assets/citrink-1x - Copy.png" id="2_wyvur"]
@@ -14,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://b5auw7kqnew8x" path="res://assets/squid_ink.png" id="11_smnpv"]
+[ext_resource type="FontFile" uid="uid://ccy6dltko5gt5" path="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf" id="11_wyvur"]
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
 [ext_resource type="AudioStream" uid="uid://pyk73n7nq16j" path="res://assets/audio/background_music.ogg" id="16_smnpv"]
@@ -133,6 +135,7 @@ material = SubResource("StandardMaterial3D_n74q2")
 font_size = 130
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_tse5i")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 material = SubResource("ShaderMaterial_ywv5c")
@@ -274,8 +277,18 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_smnpv")
 
+[node name="CountdownLabel" type="Label" parent="WaveHUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_smnpv")
+volume_db = 8.0
 autoplay = true
 max_polyphony = 3
 parameters/looping = true
@@ -329,5 +342,7 @@ vertical_alignment = 1
 
 [node name="RestartButton" type="Button" parent="UI/GameOverPanel/CenterContainer/VBoxContainer" groups=["game_over_ui"]]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_wyvur")
+theme_override_font_sizes/font_size = 80
 action_mode = 0
 text = "RESTART"
