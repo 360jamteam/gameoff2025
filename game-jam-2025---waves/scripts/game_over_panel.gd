@@ -36,6 +36,9 @@ func _on_RestartButton_pressed():
 
 # Allow ESC to jump straight to Main Menu on Game Over
 func _input(event):
+	if not visible:
+		return
+	
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().paused = false
 		get_tree().change_scene_to_file("res://ui/MainMenu.tscn")
