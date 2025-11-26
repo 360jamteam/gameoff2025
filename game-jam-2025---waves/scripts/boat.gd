@@ -316,17 +316,8 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 
 
 func crazyAssTricks():
-	# Use angular velocity (radians/sec) which is reliable and continuous
-	# Convert to local space so flips/spins are tracked relative to the boat
 	var local_angular_vel = global_transform.basis.inverse() * angular_velocity
-	
-	# Get the physics timestep
 	var delta = get_physics_process_delta_time()
-	
-	# Accumulate rotation in degrees
-	# X = pitch (front/back flip)
-	# Y = yaw (horizontal spin)  
-	# Z = roll (barrel roll)
 	totalSpinsDegrees += local_angular_vel * delta * (180.0 / PI)
 
 
