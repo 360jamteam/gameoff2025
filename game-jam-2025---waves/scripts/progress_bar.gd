@@ -65,6 +65,10 @@ func _ready() -> void:
 	invincibility_timer.timeout.connect(_on_invincibility_timeout)
 	add_child(invincibility_timer)
 
+func heal(amount: int) -> void:
+	health = min(health + amount, max_health)
+	value = health
+	update_bar_color()
 
 func apply_damage(amount: int) -> void:
 	if not can_take_damage:

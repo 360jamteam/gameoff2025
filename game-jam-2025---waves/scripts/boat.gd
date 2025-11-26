@@ -18,6 +18,7 @@ var ink_overlay: TextureRect
 @export var recoverSpeed := 1200.0  
 @export var jumpSpeed := 70.0
 @onready var collision_sound: AudioStreamPlayer = $CollisionSound
+@onready var health_sound: AudioStreamPlayer = $HealthSound
 
 # trick settings
 var totalScore = 0.0
@@ -109,13 +110,23 @@ func _on_body_entered(body: Node3D) -> void:
 	print("Body class: ", body.get_class())
 	print("Is in squid group: ", body.is_in_group("squid"))
 	
-	if collision_sound:
-		collision_sound.stop()
-		collision_sound.play()
-			
 	if body.is_in_group("squid"):
 		print("*** SQUID COLLISION DETECTED! ***")
 		show_ink(3.0)
+		collision_sound.stop()
+		collision_sound.play()
+		health_bar.apply_damage(20)
+		
+	elif body.is_in_group("health_pickup"):
+		print("*** HEALTH PICKUP COLLECTED ***")
+		if health_bar:
+			health_bar.heal(20)
+			health_sound.play()
+		if is_instance_valid(body):
+			body.queue_free()
+	if collision_sound:
+		collision_sound.stop()
+		collision_sound.play()
 		
 		# soften the hit so the boat doesn't spin forever
 		angular_velocity = Vector3.ZERO

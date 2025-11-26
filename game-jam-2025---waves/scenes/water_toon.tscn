@@ -15,6 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://b5auw7kqnew8x" path="res://assets/squid_ink.png" id="11_smnpv"]
+[ext_resource type="AudioStream" uid="uid://b8k00ihk1lecu" path="res://assets/audio/healing.mp3" id="12_tse5i"]
+[ext_resource type="PackedScene" uid="uid://blmarthfeto5v" path="res://scenes/healthfood.tscn" id="12_x2rv3"]
 [ext_resource type="FontFile" uid="uid://ccy6dltko5gt5" path="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf" id="11_wyvur"]
 [ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
@@ -209,6 +211,13 @@ draw_pass_1 = SubResource("QuadMesh_k80b6")
 [node name="CollisionSound" type="AudioStreamPlayer" parent="Boat"]
 unique_name_in_owner = true
 stream = ExtResource("19_mnr2h")
+
+[node name="HealthSound" type="AudioStreamPlayer" parent="Boat"]
+unique_name_in_owner = true
+stream = ExtResource("12_tse5i")
+
+[node name="Meat" parent="." instance=ExtResource("12_x2rv3")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 4.99936, 19.0338)
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
 
