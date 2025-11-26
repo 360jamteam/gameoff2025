@@ -30,6 +30,11 @@ var inWave := false
 var waveForce := 100.0
 var waveTorque := 1.0
 
+# countdown / control lock
+var can_control := false
+var countdown := 10.0   # seconds
+var countdown_done := false
+
 # WRONG WAY settings
 @export var track_path: NodePath
 @export var wrong_way_speed_min := 5.0
@@ -119,19 +124,60 @@ func _on_body_entered(body: Node3D) -> void:
 			health_sound.play()
 		if is_instance_valid(body):
 			body.queue_free()
+	if collision_sound:
+		collision_sound.stop()
+		collision_sound.play()
+		
+		# soften the hit so the boat doesn't spin forever
+		angular_velocity = Vector3.ZERO
+		linear_velocity *= 0.5
 
+		# nudge the boat back upright
+		recoverBoat()
+		
+		# small damage 
+		if health_bar:
+			health_bar.apply_damage(10)
+	else:
+		# other collisions can still do normal damage if you want
+		if health_bar:
+			health_bar.apply_damage(20)
+	
 func _integrate_forces(state: PhysicsDirectBodyState3D):
+	# countdown at start (blocks player control) 
+	# Always tick countdown and always tell HUD, so it can hide itself.
+	countdown -= state.get_step()
+
+	if wave_hud and wave_hud.has_method("update_countdown"):
+		wave_hud.call("update_countdown", countdown)
+
+	# Turn controls on once, when timer finishes
+	if not countdown_done and countdown <= 0.0:
+		countdown_done = true
+		can_control = true
+
 	if submerged:
 		state.linear_velocity *= 1.0 - water_drag
 		state.angular_velocity *= 1.0 - water_angular_drag
-	
-	# when not doing tricks, auto-upright
-	if not (Input.is_action_pressed("uarrow") or Input.is_action_pressed("darrow") or Input.is_action_pressed("larrow") or Input.is_action_pressed("rarrow")):
+
+	# Only recover + control if countdown finished
+	if can_control and not (
+		Input.is_action_pressed("uarrow")
+		or Input.is_action_pressed("darrow")
+		or Input.is_action_pressed("larrow")
+		or Input.is_action_pressed("rarrow")
+	):
 		recoverBoat()
-		
-	handleControls()
+
+	# Controls only after countdown
+	if can_control:
+		handleControls()
+
+	# Boat physics still always run
 	makeItFloat()
 	handleWaveCollision()
+
+	# WRONG WAY logic always runs
 	update_wrong_way(state.get_step(), state)
 
 
@@ -146,15 +192,18 @@ func handleControls():
 	if submerged:
 		if Input.is_action_pressed("forward"):
 			apply_central_force(transform.basis.z * moveSpeed)
+			totalScore += 1
 			
 		if Input.is_action_pressed("backward"):
 			apply_central_force(-transform.basis.z * moveSpeed)
 			
 		if Input.is_action_pressed("boost"):
 			apply_central_force(transform.basis.z * moveSpeed * boostMod)
+			totalScore += 3
 			
 		if Input.is_action_pressed("jump"):
 			apply_central_impulse(Vector3.UP * jumpSpeed)
+			totalScore += 5
 		
 	# tricks
 	if Input.is_action_pressed("uarrow"):
