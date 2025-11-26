@@ -196,31 +196,7 @@ func handleControls():
 	if Input.is_action_pressed("right"):
 		apply_torque_impulse(transform.basis.y * -turnSpeed)
 
-	# --- HUD messages (these only fire on the first press) ---
-	if Input.is_action_just_pressed("forward"):
-		if wave_hud and wave_hud.has_method("show_wave_message"):
-			wave_hud.call(
-				"show_wave_message",
-				"ACCELERATE (W)",
-				Color(0.6, 1.0, 0.6)
-			)
 
-	if Input.is_action_just_pressed("jump"):
-		if wave_hud and wave_hud.has_method("show_jump_message"):
-			wave_hud.call(
-				"show_jump_message",
-				"JUMP (SPACE)",
-				Color(1.0, 0.8, 0.4)
-			)
-	
-	if Input.is_action_just_pressed("boost"):
-		if wave_hud and wave_hud.has_method("show_boost_message"):
-			wave_hud.call(
-				"show_boost_message",
-				"BOOST (SHIFT)",
-				Color(0.6, 0.8, 1.0)
-			)
-	# --------------------------------------------------------
 
 	# thrust / jumping
 	if submerged:
