@@ -67,11 +67,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Game Over!"
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Score: 0"
-
 [node name="Button (Retry)" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18

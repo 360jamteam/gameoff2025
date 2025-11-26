@@ -346,3 +346,5 @@ theme_override_fonts/font = ExtResource("11_wyvur")
 theme_override_font_sizes/font_size = 80
 action_mode = 0
 text = "RESTART"
+
+[connection signal="pressed" from="UI/GameOverPanel/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_restart"]
