@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://blmarthfeto5v"]
+
+[ext_resource type="ArrayMesh" uid="uid://cf1u78ky4k0px" path="res://assets/meat.obj" id="1_2i0pg"]
+[ext_resource type="Texture2D" uid="uid://dcgdq3vs03jnh" path="res://assets/meat.png" id="2_7ie22"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jh885"]
+albedo_texture = ExtResource("2_7ie22")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_omtcd"]
+
+[node name="HealthFood" type="StaticBody3D" groups=["health_pickup"]]
+
+[node name="meat" type="MeshInstance3D" parent="." groups=["health_pickup"]]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0)
+mesh = ExtResource("1_2i0pg")
+surface_material_override/0 = SubResource("StandardMaterial3D_jh885")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["health_pickup"]]
+shape = SubResource("CapsuleShape3D_omtcd")

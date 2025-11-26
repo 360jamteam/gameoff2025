@@ -8,21 +8,29 @@ extends Path3D
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 @export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
+@export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
+
 @export var squid_spacing: float = 120.0     # distance between squids
+@export var health_item_spacing: float = 240.0       # distance along track between spawn checks
+@export var health_item_chance: float = 0.3 
 var water: MeshInstance3D
+var rng := RandomNumberGenerator.new()
 
 func _ready():
 	water = get_node(water_path)
-	
+	rng.randomize()
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
 		return
 	if not curve.sample_baked(0.0):
 		push_error("Uh uh, no points in Curve3D")
 		return
+
 	spawn_buoys()
 	create_invisible_walls()
 	spawn_squids()
+	spawn_health_items()
+	
 var boat := get_node_or_null("../Boat")
 
 func spawn_buoys():
@@ -205,6 +213,46 @@ func setup_squid_collision(squid: Node3D) -> void:
 			print("Squid collision shape found and enabled")
 		else:
 			print("WARNING: Squid has no CollisionShape3D")
+func spawn_health_items() -> void:
+	var curve_length = curve.get_baked_length()
+	if curve_length <= 0.0:
+		return
+
+	var scenes: Array[PackedScene] = []
+	if meat_scene:
+		scenes.append(meat_scene)
+
+	var half_width: float = track_width * 0.5
+	var num_slots: int = int(curve_length / health_item_spacing)
+
+	for i in range(num_slots):
+		if rng.randf() > health_item_chance:
+			continue
+
+		var dist: float = float(i) * health_item_spacing
+		if dist > curve_length:
+			break
+
+		# position along path
+		var pos: Vector3 = curve.sample_baked(dist)
+		var forward: Vector3 = (curve.sample_baked(dist + 0.1) - pos).normalized()
+		var right: Vector3 = forward.cross(Vector3.UP).normalized()
+
+		# somewhere near middle of the track
+		var lateral_offset := rng.randf_range(-half_width * 0.25, half_width * 0.25)
+		pos += right * lateral_offset
+
+		var scene: PackedScene = scenes[rng.randi_range(0, scenes.size() - 1)]
+		var pickup: Node3D = scene.instantiate()
+		add_child(pickup)
+		pickup.global_position = pos
+
+		# collision for the boat
+		if pickup is StaticBody3D:
+			# same idea as squid: boat is on layer 1
+			pickup.collision_layer = 4      # health items layer
+			pickup.collision_mask = 1       # collide with boat on layer 1
+		pickup.add_to_group("health_pickup")
 
 func check_squid_collisions() -> void:
 	if boat == null:
@@ -226,7 +274,6 @@ func check_squid_collisions() -> void:
 						
 				if boat.has_method("show_ink"):
 					boat.show_ink(3.0)
-
 				break
 
 func _process(delta: float) -> void:

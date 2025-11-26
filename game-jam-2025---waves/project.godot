@@ -29,6 +29,7 @@ window/size/viewport_height=1080
 
 squid=""
 game_over_ui=""
+health_pickup=""
 
 [input]
 
