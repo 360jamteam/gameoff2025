@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=42 format=3 uid="uid://djlg762jdm4m4"]
 
 [ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ds4dxsrdb0bxj" path="res://shaders/dither.gdshader" id="1_mste4"]
@@ -7,27 +7,26 @@
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Texture2D" uid="uid://cl5tr4tynresr" path="res://assets/citrink-1x - Copy.png" id="2_wyvur"]
 [ext_resource type="Script" uid="uid://bni6by3pg50au" path="res://scripts/trackPathSpawner.gd" id="3_p1kvb"]
-[ext_resource type="Texture2D" uid="uid://bxllfr7fk46no" path="res://assets/bayer16tile2.png" id="3_wyvur"]
+[ext_resource type="Texture2D" uid="uid://ikle5hcfdmk" path="res://assets/bayer8tile4.png" id="4_jeocs"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
-[ext_resource type="Script" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
+[ext_resource type="Script" uid="uid://hgqixchb8lf" path="res://scripts/hRWaveSpawner.gd" id="9_mste4"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
 [ext_resource type="Script" uid="uid://dlv5xdj6sfyfc" path="res://scripts/WaveHUD.gd" id="10_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://b5auw7kqnew8x" path="res://assets/squid_ink.png" id="11_smnpv"]
-[ext_resource type="FontFile" uid="uid://ccy6dltko5gt5" path="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf" id="11_wyvur"]
 [ext_resource type="AudioStream" uid="uid://b8k00ihk1lecu" path="res://assets/audio/healing.mp3" id="12_tse5i"]
 [ext_resource type="PackedScene" uid="uid://blmarthfeto5v" path="res://scenes/healthfood.tscn" id="12_x2rv3"]
-[ext_resource type="FontFile" uid="uid://ilah627yo7t" path="res://assets/fonts/BungeeTint-Regular.ttf" id="14_osogu"]
 [ext_resource type="AudioStream" uid="uid://0xqxdbcaf31" path="res://assets/audio/wave_loop.ogg" id="15_xqjy6"]
 [ext_resource type="AudioStream" uid="uid://pyk73n7nq16j" path="res://assets/audio/background_music.ogg" id="16_smnpv"]
+[ext_resource type="FontFile" uid="uid://crw1tk3vldrbl" path="res://assets/fonts/bungeeregular.ttf" id="18_jeocs"]
 [ext_resource type="Script" uid="uid://b1htjthqubuv1" path="res://scripts/progress_bar.gd" id="19_dap1e"]
 [ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="19_mnr2h"]
 [ext_resource type="Script" uid="uid://de678x25eyfbk" path="res://scripts/game_over_panel.gd" id="20_dap1e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ywv5c"]
 shader = ExtResource("1_mste4")
-shader_parameter/u_dither_tex = ExtResource("3_wyvur")
+shader_parameter/u_dither_tex = ExtResource("4_jeocs")
 shader_parameter/u_color_tex = ExtResource("2_wyvur")
 shader_parameter/u_bit_depth = 64
 shader_parameter/u_contrast = 1.8
@@ -135,6 +134,9 @@ material = SubResource("StandardMaterial3D_n74q2")
 
 [sub_resource type="LabelSettings" id="LabelSettings_dap1e"]
 font_size = 130
+font_color = Color(0.8, 0.027451, 0.00392157, 1)
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_tse5i")
@@ -227,17 +229,6 @@ script = ExtResource("9_mste4")
 [node name="WaveHUD" type="CanvasLayer" parent="."]
 script = ExtResource("10_ywv5c")
 
-[node name="WaveLabel" type="Label" parent="WaveHUD"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -55.0
-offset_right = 40.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(0, 0.145098, 0.8, 1)
-theme_override_font_sizes/font_size = 40
-horizontal_alignment = 1
-
 [node name="WrongWayLabel" type="Label" parent="WaveHUD"]
 use_parent_material = true
 anchors_preset = 5
@@ -247,35 +238,11 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
-theme_override_fonts/font = ExtResource("14_osogu")
+theme_override_fonts/font = ExtResource("18_jeocs")
 theme_override_font_sizes/font_size = 100
-
-[node name="JumpLabel" type="Label" parent="WaveHUD"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -23.0
-offset_right = 20.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_font_sizes/font_size = 40
-
-[node name="BoostLabel" type="Label" parent="WaveHUD"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -23.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.745098, 0, 0.85098, 1)
-theme_override_font_sizes/font_size = 40
 
 [node name="InkOverlay" type="TextureRect" parent="WaveHUD"]
 visible = false
@@ -287,23 +254,30 @@ grow_vertical = 2
 texture = ExtResource("11_smnpv")
 
 [node name="CountdownLabel" type="Label" parent="WaveHUD"]
-anchors_preset = 8
+anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 0.3
 anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("18_jeocs")
+theme_override_font_sizes/font_size = 100
 
 [node name="ScoreLabel" type="Label" parent="WaveHUD"]
-offset_left = 1493.0
-offset_top = 6.0
-offset_right = 1902.0
-offset_bottom = 103.0
-theme_override_fonts/font = ExtResource("14_osogu")
-theme_override_font_sizes/font_size = 48
+offset_left = 32.0
+offset_top = 68.0
+offset_right = 304.0
+offset_bottom = 165.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_fonts/font = ExtResource("18_jeocs")
+theme_override_font_sizes/font_size = 32
 text = "Score: 0"
-horizontal_alignment = 1
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_smnpv")
@@ -326,6 +300,8 @@ offset_left = 17.0
 offset_top = 12.0
 offset_right = 314.0
 offset_bottom = 61.0
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_font_sizes/font_size = 32
 value = 100.0
 script = ExtResource("19_dap1e")
 
@@ -354,6 +330,11 @@ alignment = 1
 
 [node name="GameoverLabel" type="Label" parent="UI/GameOverPanel/CenterContainer/VBoxContainer" groups=["game_over_ui"]]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.0156863, 0.00392157, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("18_jeocs")
+theme_override_font_sizes/font_size = 72
 text = "GAME OVER"
 label_settings = SubResource("LabelSettings_dap1e")
 horizontal_alignment = 1
@@ -361,9 +342,13 @@ vertical_alignment = 1
 
 [node name="RestartButton" type="Button" parent="UI/GameOverPanel/CenterContainer/VBoxContainer" groups=["game_over_ui"]]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("11_wyvur")
-theme_override_font_sizes/font_size = 80
+size_flags_horizontal = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("18_jeocs")
+theme_override_font_sizes/font_size = 42
 action_mode = 0
-text = "RESTART"
+text = "  RESTART  "
 
 [connection signal="pressed" from="UI/GameOverPanel/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_restart"]

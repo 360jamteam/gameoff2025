@@ -15,7 +15,7 @@ var style_fill: StyleBoxFlat
 signal died
 signal damaged(amount: int)
 
-@onready var custom_font: Font = load("res://assets/fonts/BungeeTint-Regular.ttf")
+@onready var custom_font: Font = load("res://assets/fonts/bungeeregular.ttf")
 
 
 func _ready() -> void:

@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://ccy6dltko5gt5"
-path="res://.godot/imported/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf-205fd1f55c5c212719cf57d59c348dc7.fontdata"
+uid="uid://crw1tk3vldrbl"
+path="res://.godot/imported/bungeeregular.ttf-8eb2a0aba8aa2463ad7d7bc2a4f9165c.fontdata"
 
 [deps]
 
-source_file="res://fonts/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf"
-dest_files=["res://.godot/imported/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf-205fd1f55c5c212719cf57d59c348dc7.fontdata"]
+source_file="res://assets/fonts/bungeeregular.ttf"
+dest_files=["res://.godot/imported/bungeeregular.ttf-8eb2a0aba8aa2463ad7d7bc2a4f9165c.fontdata"]
 
 [params]
 
