@@ -12,7 +12,8 @@
 - Sho Okano
 - Nicole Zino
 - Sunny Pak
-
+#### Start Timer and stop movement
+- Aniket Sandhu
 #### UI
 - Easton Abel
 - Nicole Zino
