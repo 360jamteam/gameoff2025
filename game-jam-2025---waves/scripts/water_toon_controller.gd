@@ -25,17 +25,26 @@ func pause_game():
 
 	# CONNECT SIGNALS
 	pause_menu_instance.resume_pressed.connect(_on_resume)
+	pause_menu_instance.settings_pressed.connect(_on_settings)
 	pause_menu_instance.restart_pressed.connect(_on_restart)
 	pause_menu_instance.main_menu_pressed.connect(_on_main_menu)
 
+
 func unpause_game():
 	get_tree().paused = false
+	free_pause_menu()
+	
+func free_pause_menu():
 	if pause_menu_instance:
 		pause_menu_instance.queue_free()
 		pause_menu_instance = null
 
 func _on_resume():
 	unpause_game()
+	
+func _on_settings():
+	free_pause_menu()
+	get_tree().change_scene_to_file("res://ui/SettingsMenu.tscn")
 
 func _on_restart():
 	unpause_game()
