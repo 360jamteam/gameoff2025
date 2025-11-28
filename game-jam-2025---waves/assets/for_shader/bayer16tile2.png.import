@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckt75x7qiay80"
-path="res://.godot/imported/twilight-5-1x - Copy.png-12f7b5dc2b2d93bf183dfbbc3da7cc66.ctex"
+uid="uid://bxllfr7fk46no"
+path="res://.godot/imported/bayer16tile2.png-8577611eb82776ca97dd6fb453b38e37.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/twilight-5-1x - Copy.png"
-dest_files=["res://.godot/imported/twilight-5-1x - Copy.png-12f7b5dc2b2d93bf183dfbbc3da7cc66.ctex"]
+source_file="res://assets/for_shader/bayer16tile2.png"
+dest_files=["res://.godot/imported/bayer16tile2.png-8577611eb82776ca97dd6fb453b38e37.ctex"]
 
 [params]
 

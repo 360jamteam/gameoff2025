@@ -16,7 +16,7 @@ func _ready() -> void:
 		wrong_way_label.visible = false
 		wrong_way_label.modulate = Color(1.0, 0.3, 0.3) # red-ish
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 # called from boat.gd 

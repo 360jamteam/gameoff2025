@@ -118,7 +118,7 @@ func _on_body_entered(body: Node3D) -> void:
 		show_ink(2.0)
 		collision_sound.stop()
 		collision_sound.play()
-		health_bar.apply_damage(100)
+		health_bar.apply_damage(20)
 		
 	elif body.is_in_group("health_pickup"):
 		print("*** HEALTH PICKUP COLLECTED ***")

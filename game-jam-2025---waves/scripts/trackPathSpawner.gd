@@ -276,5 +276,5 @@ func check_squid_collisions() -> void:
 					boat.show_ink(3.0)
 				break
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	check_squid_collisions()
