@@ -57,12 +57,12 @@ func set_move_direction(dir:Vector3) -> void:
 
 # signal for when boat drives into wave
 func _on_body_entered(body: Node3D) -> void:
-	print("body entered")
+	#print("body entered")
 	if body.has_method("setInWave"):
 		body.setInWave()
 
 #signal for when boat exits wave
 func _on_body_exited(body: Node3D) -> void:
-	print("body exited")
+	#print("body exited")
 	if body.has_method("setNotInWave"):
 		body.setNotInWave()

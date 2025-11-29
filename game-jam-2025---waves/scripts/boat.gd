@@ -7,6 +7,7 @@ extends RigidBody3D
 
 #ink
 var ink_overlay: TextureRect
+var inkTime := 1.0
 @export var float_force := 11.5
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
@@ -35,7 +36,7 @@ var waveTorque := 1.0
 
 # countdown / control lock
 var can_control := false
-var countdown := 5.0   # seconds
+var countdown := 4.0   # seconds
 var countdown_done := false
 
 # WRONG WAY settings
@@ -75,10 +76,9 @@ func _ready():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
 		if wave_hud:
 			ink_overlay = wave_hud.get_node_or_null("InkOverlay") as TextureRect
-			if ink_overlay:
-				print("Ink overlay found in WaveHUD")
-			else:
+			if not ink_overlay:
 				print("ERROR: Ink overlay NOT found in WaveHUD")
+				
 	contact_monitor = true
 	max_contacts_reported = 8
 
@@ -88,7 +88,7 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	add_to_group("boat")
 	
-	print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
+	#print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
 
 func _on_player_died() -> void:
 	_on_ink_timeout()
@@ -109,13 +109,13 @@ func _on_player_died() -> void:
 		game_over_ui.show_game_over()
 
 func _on_body_entered(body: Node3D) -> void:
-	print("Boat collided with: ", body.name)
-	print("Body class: ", body.get_class())
-	print("Is in squid group: ", body.is_in_group("squid"))
+	#print("Boat collided with: ", body.name)
+	#print("Body class: ", body.get_class())
+	#print("Is in squid group: ", body.is_in_group("squid"))
 	
 	if body.is_in_group("squid"):
 		print("*** SQUID COLLISION DETECTED! ***")
-		show_ink(2.0)
+		show_ink(inkTime)
 		collision_sound.stop()
 		collision_sound.play()
 		health_bar.apply_damage(20)
@@ -139,9 +139,10 @@ func _on_body_entered(body: Node3D) -> void:
 		recoverBoat()
 		
 		# small damage 
-		if health_bar:
-			health_bar.apply_damage(10)
+		#if health_bar:
+			#health_bar.apply_damage(10)
 	else:
+		pass
 		# other collisions can still do normal damage if you want
 		if health_bar:
 			health_bar.apply_damage(20)
@@ -371,7 +372,8 @@ func show_ink(duration: float = 3.0) -> void:
 		print("show_ink: ink_overlay is NULL")
 		return
 
-	print("show_ink: showing ink for ", duration, " seconds")
+	#print("show_ink: showing ink for ", duration, " seconds")
+	ink_overlay.modulate.a = 0.7
 	ink_overlay.visible = true
 
 	var timer = Timer.new()

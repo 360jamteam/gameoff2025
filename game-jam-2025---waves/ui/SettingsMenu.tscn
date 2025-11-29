@@ -1,14 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://hp63y328kcfv"]
+[gd_scene load_steps=8 format=3 uid="uid://hp63y328kcfv"]
 
 [ext_resource type="Script" uid="uid://dfxk7fcrxan5j" path="res://ui/settings_menu.gd" id="1_1j15u"]
 [ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_rd3qm"]
 [ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_1j15u"]
 [ext_resource type="FontFile" uid="uid://crw1tk3vldrbl" path="res://assets/fonts/bungeeregular.ttf" id="2_7lsre"]
+[ext_resource type="PackedScene" uid="uid://b8uanuinapvkp" path="res://ui/volume_slider.tscn" id="3_6xtrn"]
 [ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_7lsre"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6xtrn"]
 
 [node name="SettingsMenu" type="Control"]
+process_mode = 3
+z_index = 2
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -26,7 +29,9 @@ anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -152.0
-offset_right = 152.0
+offset_top = -133.0
+offset_right = 104.0
+offset_bottom = 133.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
@@ -39,40 +44,71 @@ theme_override_font_sizes/font_size = 48
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="HBoxContainer (Volume)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
-theme_override_constants/separation = 15
-alignment = 1
 
-[node name="Volume" type="Label" parent="VBoxContainer/HBoxContainer (Volume)"]
+[node name="HBoxContainer (Overall)" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 2
+
+[node name="All" type="Label" parent="VBoxContainer/HBoxContainer (Overall)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
-text = "Volume"
+text = "Overall"
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Volume)"]
-custom_minimum_size = Vector2(150, 0)
+[node name="AllVolume" parent="VBoxContainer/HBoxContainer (Overall)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
-tick_count = 1
+bus_name = "Master"
 
-[node name="HBoxContainer (Sensitivity)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer (Music)" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 theme_override_constants/separation = 15
-alignment = 1
+alignment = 2
 
-[node name="Sensitivity" type="Label" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
+[node name="Music" type="Label" parent="VBoxContainer/HBoxContainer (Music)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
-text = "Sensitivity"
+text = "Music       "
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer (Sensitivity)"]
-custom_minimum_size = Vector2(150, 0)
+[node name="MusicVolume" parent="VBoxContainer/HBoxContainer (Music)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
+bus_name = "music"
+
+[node name="HBoxContainer (Ambient)" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Ambient" type="Label" parent="VBoxContainer/HBoxContainer (Ambient)"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_7lsre")
+theme_override_font_sizes/font_size = 18
+text = "Ambient"
+
+[node name="AmbientVolume" parent="VBoxContainer/HBoxContainer (Ambient)" instance=ExtResource("3_6xtrn")]
+layout_mode = 2
+bus_name = "ambient"
+
+[node name="HBoxContainer (SFX)" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SFX" type="Label" parent="VBoxContainer/HBoxContainer (SFX)"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_7lsre")
+theme_override_font_sizes/font_size = 18
+text = "SFX              
+"
+
+[node name="SFXVolume" parent="VBoxContainer/HBoxContainer (SFX)" instance=ExtResource("3_6xtrn")]
+layout_mode = 2
+bus_name = "sfx"
 
 [node name="Button (Back)" type="Button" parent="VBoxContainer"]
+process_mode = 3
+z_index = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_7lsre")
@@ -83,4 +119,5 @@ theme_override_styles/pressed = ExtResource("2_1j15u")
 theme_override_styles/normal = ExtResource("3_7lsre")
 text = "    Back    "
 
+[connection signal="mouse_entered" from="VBoxContainer/Button (Back)" to="." method="_on_button_back_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button (Back)" to="." method="_on_button_back_pressed"]

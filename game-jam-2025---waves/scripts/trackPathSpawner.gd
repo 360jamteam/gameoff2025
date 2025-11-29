@@ -10,8 +10,8 @@ extends Path3D
 @export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
 @export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
 
-@export var squid_spacing: float = 120.0     # distance between squids
-@export var health_item_spacing: float = 240.0       # distance along track between spawn checks
+@export var squid_spacing: float = 240.0     # distance between squids
+@export var health_item_spacing: float = 480.0       # distance along track between spawn checks
 @export var health_item_chance: float = 0.3 
 var water: MeshInstance3D
 var rng := RandomNumberGenerator.new()
@@ -204,13 +204,13 @@ func setup_squid_collision(squid: Node3D) -> void:
 		# Add to squid group for easy detection
 		squid.add_to_group("squid")
 		
-		print("Squid collision setup - Layer: ", squid.collision_layer, " Mask: ", squid.collision_mask)
+		#print("Squid collision setup - Layer: ", squid.collision_layer, " Mask: ", squid.collision_mask)
 		
 		# Ensure collision shape exists and is enabled
 		var collision_shape = squid.get_node_or_null("CollisionShape3D")
 		if collision_shape:
 			collision_shape.disabled = false
-			print("Squid collision shape found and enabled")
+			#print("Squid collision shape found and enabled")
 		else:
 			print("WARNING: Squid has no CollisionShape3D")
 func spawn_health_items() -> void:
@@ -270,7 +270,7 @@ func check_squid_collisions() -> void:
 			
 			# If very close, trigger collision
 			if distance < 15.0:
-				print("Manual collision detected with squid at distance: ", distance)
+				#print("Manual collision detected with squid at distance: ", distance)
 						
 				if boat.has_method("show_ink"):
 					boat.show_ink(3.0)
