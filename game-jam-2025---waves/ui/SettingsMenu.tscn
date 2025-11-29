@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://hp63y328kcfv"]
+[gd_scene load_steps=9 format=3 uid="uid://hp63y328kcfv"]
 
 [ext_resource type="Script" uid="uid://dfxk7fcrxan5j" path="res://ui/settings_menu.gd" id="1_1j15u"]
 [ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_rd3qm"]
 [ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_1j15u"]
 [ext_resource type="FontFile" uid="uid://crw1tk3vldrbl" path="res://assets/fonts/bungeeregular.ttf" id="2_7lsre"]
+[ext_resource type="Texture2D" uid="uid://dm0texeu1k2kl" path="res://ui/BBX_title.PNG" id="2_n5l55"]
 [ext_resource type="PackedScene" uid="uid://b8uanuinapvkp" path="res://ui/volume_slider.tscn" id="3_6xtrn"]
 [ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_7lsre"]
 
@@ -13,100 +14,111 @@
 process_mode = 3
 z_index = 2
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1j15u")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -1
+z_as_relative = false
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -152.0
-offset_top = -133.0
-offset_right = 104.0
-offset_bottom = 133.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_n5l55")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.0412037
+anchor_right = 0.75
+anchor_bottom = 1.0
+offset_left = -176.14
+offset_top = -118.5
+offset_right = 164.86
+offset_bottom = 119.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
 alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
-theme_override_font_sizes/font_size = 48
-text = "Settings"
+theme_override_font_sizes/font_size = 64
+text = "SETTINGS"
 horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer (Overall)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer (Overall)" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 15
 alignment = 2
 
-[node name="All" type="Label" parent="VBoxContainer/HBoxContainer (Overall)"]
+[node name="All" type="Label" parent="VBoxContainer2/HBoxContainer (Overall)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
 text = "Overall"
 
-[node name="AllVolume" parent="VBoxContainer/HBoxContainer (Overall)" instance=ExtResource("3_6xtrn")]
+[node name="AllVolume" parent="VBoxContainer2/HBoxContainer (Overall)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
 bus_name = "Master"
 
-[node name="HBoxContainer (Music)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer (Music)" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 15
 alignment = 2
 
-[node name="Music" type="Label" parent="VBoxContainer/HBoxContainer (Music)"]
+[node name="Music" type="Label" parent="VBoxContainer2/HBoxContainer (Music)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
 text = "Music       "
 
-[node name="MusicVolume" parent="VBoxContainer/HBoxContainer (Music)" instance=ExtResource("3_6xtrn")]
+[node name="MusicVolume" parent="VBoxContainer2/HBoxContainer (Music)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
 bus_name = "music"
 
-[node name="HBoxContainer (Ambient)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer (Ambient)" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Ambient" type="Label" parent="VBoxContainer/HBoxContainer (Ambient)"]
+[node name="Ambient" type="Label" parent="VBoxContainer2/HBoxContainer (Ambient)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
 text = "Ambient"
 
-[node name="AmbientVolume" parent="VBoxContainer/HBoxContainer (Ambient)" instance=ExtResource("3_6xtrn")]
+[node name="AmbientVolume" parent="VBoxContainer2/HBoxContainer (Ambient)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
 bus_name = "ambient"
 
-[node name="HBoxContainer (SFX)" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer (SFX)" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="SFX" type="Label" parent="VBoxContainer/HBoxContainer (SFX)"]
+[node name="SFX" type="Label" parent="VBoxContainer2/HBoxContainer (SFX)"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7lsre")
 theme_override_font_sizes/font_size = 18
 text = "SFX              
 "
 
-[node name="SFXVolume" parent="VBoxContainer/HBoxContainer (SFX)" instance=ExtResource("3_6xtrn")]
+[node name="SFXVolume" parent="VBoxContainer2/HBoxContainer (SFX)" instance=ExtResource("3_6xtrn")]
 layout_mode = 2
 bus_name = "sfx"
 
-[node name="Button (Back)" type="Button" parent="VBoxContainer"]
+[node name="Button (Back)" type="Button" parent="VBoxContainer2"]
 process_mode = 3
 z_index = 2
 layout_mode = 2
@@ -119,5 +131,5 @@ theme_override_styles/pressed = ExtResource("2_1j15u")
 theme_override_styles/normal = ExtResource("3_7lsre")
 text = "    Back    "
 
-[connection signal="mouse_entered" from="VBoxContainer/Button (Back)" to="." method="_on_button_back_mouse_entered"]
-[connection signal="pressed" from="VBoxContainer/Button (Back)" to="." method="_on_button_back_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer2/Button (Back)" to="." method="_on_button_back_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer2/Button (Back)" to="." method="_on_button_back_pressed"]
