@@ -375,6 +375,7 @@ func show_ink(duration: float = 3.0) -> void:
 	#print("show_ink: showing ink for ", duration, " seconds")
 	ink_overlay.modulate.a = 0.7
 	ink_overlay.visible = true
+	ink_overlay.modulate.a = 1.0  
 
 	var timer = Timer.new()
 	timer.wait_time = duration
@@ -383,11 +384,19 @@ func show_ink(duration: float = 3.0) -> void:
 	add_child(timer)
 	timer.start()
 
+
 func _on_ink_timeout() -> void:
-	if ink_overlay:
-		ink_overlay.visible = false
-	
-	# Remove the timer
+	fadeInk()
+
 	for child in get_children():
 		if child is Timer:
 			child.queue_free()
+
+			
+func fadeInk():
+	var tween := get_tree().create_tween()
+	tween.tween_property(ink_overlay, "modulate:a", 0.0, 1.0)
+	tween.finished.connect(func ():
+		ink_overlay.visible = false
+		ink_overlay.modulate.a = 1.0
+	)
