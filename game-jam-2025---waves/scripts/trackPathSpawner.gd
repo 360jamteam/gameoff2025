@@ -1,30 +1,36 @@
 extends Path3D
 
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
-@export var buoy_spacing: float = 25.0
-@export var track_width: float = 120.0
-@export var wall_height: float = 300.0
+@export var buoy_spacing: float = 70.0
+@export var buoy_offset_from_wall: float = 20.0
+@export var track_width: float = 300.0
+@export var wall_height: float = 400.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
-
 @export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
+@export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
+
 @export var squid_spacing: float = 120.0     # distance between squids
-
-
+@export var health_item_spacing: float = 240.0       # distance along track between spawn checks
+@export var health_item_chance: float = 0.3 
 var water: MeshInstance3D
+var rng := RandomNumberGenerator.new()
 
 func _ready():
 	water = get_node(water_path)
-	
+	rng.randomize()
 	if not water:
 		push_error("Water node not found at path: " + str(water_path))
 		return
 	if not curve.sample_baked(0.0):
 		push_error("Uh uh, no points in Curve3D")
 		return
+
 	spawn_buoys()
 	create_invisible_walls()
 	spawn_squids()
+	spawn_health_items()
+	
 var boat := get_node_or_null("../Boat")
 
 func spawn_buoys():
@@ -34,8 +40,8 @@ func spawn_buoys():
 	for i in range(num_buoys):
 		var offset = (i * buoy_spacing)
 		
-		spawn_buoy_at_offset(offset, -track_width / 2.0)
-		spawn_buoy_at_offset(offset, track_width / 2.0)
+		spawn_buoy_at_offset(offset, (-track_width / 2.0) - buoy_offset_from_wall)
+		spawn_buoy_at_offset(offset, (track_width / 2.0) + buoy_offset_from_wall)
 
 func spawn_buoy_at_offset(along_path: float, perpendicular_offset: float):
 	var buoy = buoy_scene.instantiate()
@@ -134,15 +140,8 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	mesh_instance.mesh = array_mesh
 	
 	# make mesh invisible
-	#mesh_instance.visible = false
+	mesh_instance.visible = false
 	
-	# make it kinda see through for debug
-	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(1, 0, 0, 0.15) 
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mesh_instance.material_override = material
-
 	# create collision shape from mesh
 	var concave_shape = array_mesh.create_trimesh_shape()
 	collision_shape.shape = concave_shape
@@ -184,6 +183,8 @@ func spawn_squids() -> void:
 		world_center.y = water_height   # sit on water
 
 		var squid: Node3D = squid_scene.instantiate()
+		
+		setup_squid_collision(squid)
 		add_child(squid)
 
 		squid.global_position = world_center
@@ -192,4 +193,88 @@ func spawn_squids() -> void:
 		if squid.has_method("setup"):
 			squid.setup(world_center, right, half_width)
 
-		print("Spawned squid at: ", world_center)
+
+func setup_squid_collision(squid: Node3D) -> void:
+	# Ensure the squid has proper collision setup
+	if squid is StaticBody3D:
+		# Set collision layers and masks - FIXED
+		squid.collision_layer = 2  # Layer 2 for squids
+		squid.collision_mask = 1   # Mask for layer 1 (boat)
+		
+		# Add to squid group for easy detection
+		squid.add_to_group("squid")
+		
+		print("Squid collision setup - Layer: ", squid.collision_layer, " Mask: ", squid.collision_mask)
+		
+		# Ensure collision shape exists and is enabled
+		var collision_shape = squid.get_node_or_null("CollisionShape3D")
+		if collision_shape:
+			collision_shape.disabled = false
+			print("Squid collision shape found and enabled")
+		else:
+			print("WARNING: Squid has no CollisionShape3D")
+func spawn_health_items() -> void:
+	var curve_length = curve.get_baked_length()
+	if curve_length <= 0.0:
+		return
+
+	var scenes: Array[PackedScene] = []
+	if meat_scene:
+		scenes.append(meat_scene)
+
+	var half_width: float = track_width * 0.5
+	var num_slots: int = int(curve_length / health_item_spacing)
+
+	for i in range(num_slots):
+		if rng.randf() > health_item_chance:
+			continue
+
+		var dist: float = float(i) * health_item_spacing
+		if dist > curve_length:
+			break
+
+		# position along path
+		var pos: Vector3 = curve.sample_baked(dist)
+		var forward: Vector3 = (curve.sample_baked(dist + 0.1) - pos).normalized()
+		var right: Vector3 = forward.cross(Vector3.UP).normalized()
+
+		# somewhere near middle of the track
+		var lateral_offset := rng.randf_range(-half_width * 0.25, half_width * 0.25)
+		pos += right * lateral_offset
+
+		var scene: PackedScene = scenes[rng.randi_range(0, scenes.size() - 1)]
+		var pickup: Node3D = scene.instantiate()
+		add_child(pickup)
+		pickup.global_position = pos
+
+		# collision for the boat
+		if pickup is StaticBody3D:
+			# same idea as squid: boat is on layer 1
+			pickup.collision_layer = 4      # health items layer
+			pickup.collision_mask = 1       # collide with boat on layer 1
+		pickup.add_to_group("health_pickup")
+
+func check_squid_collisions() -> void:
+	if boat == null:
+		boat = get_node_or_null("../Boat")
+		if boat == null:
+			return
+	
+	var squids = get_tree().get_nodes_in_group("squid")
+	var boat_pos = boat.global_position
+	
+	for squid in squids:
+		if is_instance_valid(squid):
+			var squid_pos = squid.global_position
+			var distance = boat_pos.distance_to(squid_pos)
+			
+			# If very close, trigger collision
+			if distance < 15.0:
+				print("Manual collision detected with squid at distance: ", distance)
+						
+				if boat.has_method("show_ink"):
+					boat.show_ink(3.0)
+				break
+
+func _process(delta: float) -> void:
+	check_squid_collisions()

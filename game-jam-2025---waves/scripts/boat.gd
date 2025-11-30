@@ -21,6 +21,9 @@ extends RigidBody3D
 @export var boostMod := 2.0
 @export var turnSpeed := 0.1
 @export var recoverSpeed := 1200.0  
+@export var jumpSpeed := 70.0
+@onready var collision_sound: AudioStreamPlayer = $CollisionSound
+@onready var health_sound: AudioStreamPlayer = $HealthSound
 
 # Trick settings (left here for later scoring / rotation tricks)
 var totalScore = 0.0
@@ -64,6 +67,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# Handle player inputs and floating each physics step.
 	handleControls()
 	makeItFloat()
+	handleWaveCollision()
+
+	# WRONG WAY logic always runs
+	update_wrong_way(state.get_step(), state)
+
 
 func handleControls():
 	# Left / right steering (always allowed, even if slightly out of the water)
@@ -110,9 +118,11 @@ func handleControls():
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
+
 func makeItFloat():
 	# Figure out how far the boat is below the water surface and push it up accordingly.
 	submerged = false
+	touchingWater = false
 	var body_height = global_transform.origin.y
 	var water_height = water.get_height(global_transform.origin)
 	var depth = water_height - body_height
@@ -122,6 +132,10 @@ func makeItFloat():
 		# Apply an upward force proportional to how deep the boat is.
 		apply_force(Vector3.UP * float_force * gravity * depth)
 	
+	if depth >= 0:
+		touchingWater = true
+
+
 func recoverBoat():
 	# Try to keep the boat upright so it doesn't stay flipped over.
 	var current_up = global_transform.basis.y
