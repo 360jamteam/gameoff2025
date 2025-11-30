@@ -13,9 +13,9 @@ disable_receive_shadows = true
 [sub_resource type="SphereMesh" id="SphereMesh_hxl6b"]
 material = SubResource("StandardMaterial3D_ry4qp")
 radius = 15.0
-height = 400.0
-radial_segments = 16
-rings = 8
+height = 320.0
+radial_segments = 8
+rings = 4
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_hxl6b")

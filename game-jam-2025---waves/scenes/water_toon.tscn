@@ -34,12 +34,12 @@ seamless = true
 noise = SubResource("FastNoiseLite_aitcd")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnm43"]
-sky_top_color = Color(0.0877594, 0.391381, 0.655097, 1)
-sky_horizon_color = Color(0.148254, 0.688983, 0.874673, 1)
+sky_top_color = Color(0.105969, 0.43049, 0.714713, 1)
+sky_horizon_color = Color(0.118644, 0.645399, 0.822507, 1)
 sky_cover = SubResource("NoiseTexture2D_7b4nq")
-sky_cover_modulate = Color(0.791999, 0.791999, 0.791999, 1)
-ground_bottom_color = Color(0.381706, 0.588678, 0.98722, 1)
-ground_horizon_color = Color(0.255318, 0.613902, 0.956529, 1)
+sky_cover_modulate = Color(0.830336, 0.830335, 0.830335, 1)
+ground_bottom_color = Color(0.534314, 0.694618, 0.992912, 1)
+ground_horizon_color = Color(0.448096, 0.712065, 0.984101, 1)
 ground_curve = 1.47034
 
 [sub_resource type="Sky" id="Sky_nnm43"]
@@ -62,9 +62,9 @@ fog_depth_end = 1000.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7b4nq"]
 render_priority = 0
 shader = ExtResource("2_p1kvb")
-shader_parameter/WATER_COL = Vector4(0.04, 0.2, 0.6, 1)
-shader_parameter/WATER2_COL = Vector4(0.04, 0.15, 0.3, 1)
-shader_parameter/FOAM_COL = Vector4(0.3, 0.3, 0.3, 1)
+shader_parameter/WATER_COL = Vector4(0.04, 0.38, 0.88, 1)
+shader_parameter/WATER2_COL = Vector4(0.04, 0.3, 0.5, 1)
+shader_parameter/FOAM_COL = Vector4(0.5, 0.5, 0.5, 1)
 shader_parameter/distortion_speed = 2.0
 shader_parameter/tile = Vector2(100, 100)
 shader_parameter/height = 3.0
@@ -131,7 +131,6 @@ environment = SubResource("Environment_0poqx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.789084, 0.614285, 0, -0.614285, -0.789084, 0, 0, 0)
-light_energy = 0.8
 light_volumetric_fog_energy = 3.699
 light_angular_distance = 16.27
 light_bake_mode = 1

@@ -92,7 +92,8 @@ stream = ExtResource("5_6ld5q")
 bus = &"sfx"
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(0.997403, 0.0173621, 0.0699071, -0.0173621, -0.883954, 0.467252, 0.0699071, -0.467253, -0.881356, 1.37386, 10.3849, -16.9737)
-light_energy = 5.0
+transform = Transform3D(0.997246, 0.00256109, 0.0741248, -0.00256113, -0.997619, 0.0689253, 0.0741248, -0.0689253, -0.994865, 1.29449, 5.17158, -14.8377)
+light_energy = 3.0
 shadow_enabled = true
-spot_range = 44.9624
+spot_range = 19.096
+spot_angle = 20.0

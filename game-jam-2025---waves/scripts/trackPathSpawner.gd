@@ -5,7 +5,7 @@ extends Path3D
 @export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
 @export var finish_line_scene: PackedScene = preload("res://scenes/finish_line.tscn")
 
-@export var buoy_spacing: float = 70.0
+@export var buoy_spacing: float = 100.0
 @export var buoy_offset_from_wall: float = 20.0
 
 @export var track_width: float = 300.0
