@@ -1,18 +1,22 @@
 extends Path3D
 
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
+@export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
+@export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
+@export var finish_line_scene: PackedScene = preload("res://scenes/finish_line.tscn")
+
 @export var buoy_spacing: float = 70.0
 @export var buoy_offset_from_wall: float = 20.0
+
 @export var track_width: float = 300.0
 @export var wall_height: float = 400.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
-@export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
-@export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
 
 @export var squid_spacing: float = 240.0     # distance between squids
 @export var health_item_spacing: float = 480.0       # distance along track between spawn checks
-@export var health_item_chance: float = 0.3 
+@export var health_item_chance: float = 0.5 
+
 var water: MeshInstance3D
 var rng := RandomNumberGenerator.new()
 
@@ -30,6 +34,7 @@ func _ready():
 	create_invisible_walls()
 	spawn_squids()
 	spawn_health_items()
+	spawn_finish_line()
 	
 var boat := get_node_or_null("../Boat")
 
@@ -213,6 +218,7 @@ func setup_squid_collision(squid: Node3D) -> void:
 			#print("Squid collision shape found and enabled")
 		else:
 			print("WARNING: Squid has no CollisionShape3D")
+			
 func spawn_health_items() -> void:
 	var curve_length = curve.get_baked_length()
 	if curve_length <= 0.0:
@@ -278,3 +284,30 @@ func check_squid_collisions() -> void:
 
 func _process(_delta: float) -> void:
 	check_squid_collisions()
+	
+func spawn_finish_line() -> void:
+	var finish_line = finish_line_scene.instantiate()
+	add_child(finish_line)
+	
+	# using same logic as in hRWaveSpawner.gd to make 
+	# the finish line rotate to face the incoming track
+
+	# close to start for testing
+	# var end_of_track_a = to_global(curve.get_baked_points().get(1998))
+	# var end_of_track_b = to_global(curve.get_baked_points().get(2000))
+
+	# actual end of track
+	var track_points = curve.get_baked_points()
+	track_points.reverse()
+	var end_of_track_a = to_global(track_points.get(0))
+	var end_of_track_b = to_global(track_points.get(2))
+
+	var finish_line_direction = (end_of_track_b - end_of_track_a).normalized()
+	
+	var finish_line_basis = Basis()
+	finish_line_basis.z = -finish_line_direction
+	finish_line_basis.y = Vector3.UP
+	finish_line_basis.x = finish_line_basis.y.cross(finish_line_basis.z).normalized()
+	
+	finish_line.global_position = end_of_track_b
+	finish_line.global_transform.basis = finish_line_basis

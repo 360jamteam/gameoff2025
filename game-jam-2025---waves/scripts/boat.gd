@@ -27,7 +27,12 @@ var touchingWater := true
 var totalSpinsDegrees := Vector3.ZERO
 var spinThreshold := 360.0
 var spinPoints := 100
+
 @onready var scoreLabel: Label = get_node_or_null("../WaveHUD/ScoreLabel")
+@onready var runTimeLabel: Label = get_node_or_null("../WaveHUD/RunTimeLabel")
+
+var runTimeElapsed := 0.0
+var isRunning := false
 
 # wave effect settings
 var inWave := false
@@ -44,7 +49,6 @@ var countdown_done := false
 @export var wrong_way_speed_min := 5.0
 @export var wrong_way_time_threshold := 0.5
 @export var wave_hud_path: NodePath
-
 
 var track: Path3D
 var wrong_way_timer := 0.0
@@ -147,6 +151,11 @@ func _on_body_entered(body: Node3D) -> void:
 		if health_bar:
 			health_bar.apply_damage(20)
 	
+func _process(delta: float) -> void:
+	if isRunning:
+		runTimeElapsed += delta
+		updateRunTimeLabel()
+
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# countdown at start (blocks player control) 
 	# Always tick countdown and always tell HUD, so it can hide itself.
@@ -158,6 +167,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# Turn controls on once, when timer finishes
 	if not countdown_done and countdown <= 0.0:
 		countdown_done = true
+		startRun()
 		can_control = true
 
 	if submerged:
@@ -188,7 +198,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 	# WRONG WAY logic always runs
 	update_wrong_way(state.get_step(), state)
-
 
 func handleControls():
 	# steering
@@ -225,7 +234,6 @@ func handleControls():
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
-
 func makeItFloat():
 	submerged = false
 	touchingWater = false
@@ -240,12 +248,10 @@ func makeItFloat():
 	if depth >= 0:
 		touchingWater = true
 
-
 func recoverBoat():
 	var current_up = global_transform.basis.y
 	var correction_axis = current_up.cross(Vector3.UP)
 	apply_torque(correction_axis * recoverSpeed)
-
 
 func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if track == null:
@@ -291,12 +297,10 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
 
-
 func crazyAssTricks():
 	var local_angular_vel = global_transform.basis.inverse() * angular_velocity
 	var delta = get_physics_process_delta_time()
 	totalSpinsDegrees += local_angular_vel * delta * (180.0 / PI)
-
 
 func checkTrickLanding():
 	# calculate completed spins on each axis
@@ -321,7 +325,6 @@ func checkTrickLanding():
 		if xSpins > 0 or ySpins > 0 or zSpins > 0:
 			print("totally buggered that one")
 		totalSpinsDegrees = Vector3.ZERO
-
 
 func calcPoints(xSpins: int, ySpins: int, zSpins: int):
 	var points := 0
@@ -350,13 +353,11 @@ func calcPoints(xSpins: int, ySpins: int, zSpins: int):
 	print("Points earned: ", points, " | Total score: ", totalScore)
 	scoreLabel.text = "Score: " + str(totalScore)
 
-
 func setInWave() -> void:
 	inWave = true
 	
 func setNotInWave() -> void:
 	inWave = false
-
 
 func handleWaveCollision() -> void:
 	if not inWave:
@@ -384,7 +385,6 @@ func show_ink(duration: float = 3.0) -> void:
 	add_child(timer)
 	timer.start()
 
-
 func _on_ink_timeout() -> void:
 	fadeInk()
 
@@ -392,7 +392,6 @@ func _on_ink_timeout() -> void:
 		if child is Timer:
 			child.queue_free()
 
-			
 func fadeInk():
 	var tween := get_tree().create_tween()
 	tween.tween_property(ink_overlay, "modulate:a", 0.0, 1.0)
@@ -400,3 +399,20 @@ func fadeInk():
 		ink_overlay.visible = false
 		ink_overlay.modulate.a = 1.0
 	)
+
+func startRun() -> void:
+	isRunning = true
+	runTimeElapsed = 0.0
+
+func updateRunTimeLabel() -> void:
+	var minutes = int(runTimeElapsed) / 60
+	var seconds = int(runTimeElapsed) % 60
+	var milliseconds = int((runTimeElapsed - int(runTimeElapsed)) * 100)
+	
+	runTimeLabel.text = "%02d:%02d:%02d" % [minutes, seconds, milliseconds]
+
+func finishRun() -> void:
+	isRunning = false
+
+func getFinalTime() -> String:
+	return runTimeLabel.text

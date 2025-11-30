@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://xelyj3ndk32m"]
+
+[ext_resource type="Script" uid="uid://cftwubsxyv7ki" path="res://scripts/finish_line.gd" id="1_05ejo"]
+[ext_resource type="Texture2D" uid="uid://c5bxrr61ohwtv" path="res://assets/checker.png" id="1_ojfi3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05ejo"]
+albedo_color = Color(0.633757, 0.633757, 0.633757, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3p0rx"]
+material = SubResource("StandardMaterial3D_05ejo")
+top_radius = 5.0
+bottom_radius = 5.0
+height = 300.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_501mb"]
+albedo_texture = ExtResource("1_ojfi3")
+uv1_scale = Vector3(10, 1, 10)
+uv2_scale = Vector3(10, 10, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_62fws"]
+material = SubResource("StandardMaterial3D_501mb")
+size = Vector3(300, 30, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jul3l"]
+size = Vector3(400, 500, 1)
+
+[node name="FinishLine" type="Area3D"]
+script = ExtResource("1_05ejo")
+
+[node name="Pole-X" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 0)
+mesh = SubResource("CylinderMesh_3p0rx")
+
+[node name="Pole+X" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, 0, 0)
+mesh = SubResource("CylinderMesh_3p0rx")
+
+[node name="Banner" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 120.85, 0)
+mesh = SubResource("BoxMesh_62fws")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_jul3l")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

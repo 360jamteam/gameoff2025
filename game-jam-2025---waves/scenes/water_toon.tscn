@@ -331,10 +331,10 @@ theme_override_fonts/font = ExtResource("18_jeocs")
 theme_override_font_sizes/font_size = 100
 
 [node name="ScoreLabel" type="Label" parent="WaveHUD"]
-offset_left = 32.0
-offset_top = 68.0
-offset_right = 304.0
-offset_bottom = 165.0
+offset_left = 21.0
+offset_top = 104.0
+offset_right = 293.0
+offset_bottom = 140.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
@@ -343,5 +343,17 @@ theme_override_constants/outline_size = 7
 theme_override_fonts/font = ExtResource("18_jeocs")
 theme_override_font_sizes/font_size = 32
 text = "Score: 0"
+
+[node name="RunTimeLabel" type="Label" parent="WaveHUD"]
+offset_left = 20.0
+offset_top = 68.0
+offset_right = 184.0
+offset_bottom = 101.0
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("18_jeocs")
+theme_override_font_sizes/font_size = 32
+text = "00:00:00"
 
 [connection signal="pressed" from="UI/GameOverPanel/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_restart"]
