@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bto6lrddkous7"
-path="res://.godot/imported/dream-haze-8-1x.png-ef964259546b756bd74f64ff0589d25e.ctex"
+path="res://.godot/imported/dream-haze-8-1x.png-e9f637dcd467829f41d3d636f7b9deba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/dream-haze-8-1x.png"
-dest_files=["res://.godot/imported/dream-haze-8-1x.png-ef964259546b756bd74f64ff0589d25e.ctex"]
+source_file="res://assets/for_shader/dream-haze-8-1x.png"
+dest_files=["res://.godot/imported/dream-haze-8-1x.png-e9f637dcd467829f41d3d636f7b9deba.ctex"]
 
 [params]
 

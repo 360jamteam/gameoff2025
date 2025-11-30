@@ -7,6 +7,7 @@ extends RigidBody3D
 
 #ink
 var ink_overlay: TextureRect
+var inkTime := 1.0
 @export var float_force := 11.5
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
@@ -26,7 +27,12 @@ var touchingWater := true
 var totalSpinsDegrees := Vector3.ZERO
 var spinThreshold := 360.0
 var spinPoints := 100
+
 @onready var scoreLabel: Label = get_node_or_null("../WaveHUD/ScoreLabel")
+@onready var runTimeLabel: Label = get_node_or_null("../WaveHUD/RunTimeLabel")
+
+var runTimeElapsed := 0.0
+var isRunning := false
 
 # wave effect settings
 var inWave := false
@@ -35,7 +41,7 @@ var waveTorque := 1.0
 
 # countdown / control lock
 var can_control := false
-var countdown := 10.0   # seconds
+var countdown := 4.0   # seconds
 var countdown_done := false
 
 # WRONG WAY settings
@@ -43,7 +49,6 @@ var countdown_done := false
 @export var wrong_way_speed_min := 5.0
 @export var wrong_way_time_threshold := 0.5
 @export var wave_hud_path: NodePath
-
 
 var track: Path3D
 var wrong_way_timer := 0.0
@@ -75,10 +80,9 @@ func _ready():
 		wave_hud = get_node_or_null(wave_hud_path) as CanvasLayer
 		if wave_hud:
 			ink_overlay = wave_hud.get_node_or_null("InkOverlay") as TextureRect
-			if ink_overlay:
-				print("Ink overlay found in WaveHUD")
-			else:
+			if not ink_overlay:
 				print("ERROR: Ink overlay NOT found in WaveHUD")
+				
 	contact_monitor = true
 	max_contacts_reported = 8
 
@@ -88,7 +92,7 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	add_to_group("boat")
 	
-	print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
+	#print("Boat collision setup - Layer: ", collision_layer, " Mask: ", collision_mask)
 
 func _on_player_died() -> void:
 	_on_ink_timeout()
@@ -109,13 +113,13 @@ func _on_player_died() -> void:
 		game_over_ui.show_game_over()
 
 func _on_body_entered(body: Node3D) -> void:
-	print("Boat collided with: ", body.name)
-	print("Body class: ", body.get_class())
-	print("Is in squid group: ", body.is_in_group("squid"))
+	#print("Boat collided with: ", body.name)
+	#print("Body class: ", body.get_class())
+	#print("Is in squid group: ", body.is_in_group("squid"))
 	
 	if body.is_in_group("squid"):
 		print("*** SQUID COLLISION DETECTED! ***")
-		show_ink(3.0)
+		show_ink(inkTime)
 		collision_sound.stop()
 		collision_sound.play()
 		health_bar.apply_damage(20)
@@ -128,8 +132,8 @@ func _on_body_entered(body: Node3D) -> void:
 		if is_instance_valid(body):
 			body.queue_free()
 	if collision_sound:
-		collision_sound.stop()
-		collision_sound.play()
+		#collision_sound.stop()
+		#collision_sound.play()
 		
 		# soften the hit so the boat doesn't spin forever
 		angular_velocity = Vector3.ZERO
@@ -139,13 +143,18 @@ func _on_body_entered(body: Node3D) -> void:
 		recoverBoat()
 		
 		# small damage 
-		if health_bar:
-			health_bar.apply_damage(10)
-	else:
+		#if health_bar:
+			#health_bar.apply_damage(10)
+	#else:
 		# other collisions can still do normal damage if you want
-		if health_bar:
-			health_bar.apply_damage(20)
+		#if health_bar:
+			#health_bar.apply_damage(20)
 	
+func _process(delta: float) -> void:
+	if isRunning:
+		runTimeElapsed += delta
+		updateRunTimeLabel()
+
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# countdown at start (blocks player control) 
 	# Always tick countdown and always tell HUD, so it can hide itself.
@@ -157,6 +166,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	# Turn controls on once, when timer finishes
 	if not countdown_done and countdown <= 0.0:
 		countdown_done = true
+		startRun()
 		can_control = true
 
 	if submerged:
@@ -187,7 +197,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 	# WRONG WAY logic always runs
 	update_wrong_way(state.get_step(), state)
-
 
 func handleControls():
 	# steering
@@ -224,7 +233,6 @@ func handleControls():
 	if Input.is_action_pressed("spin"):
 		apply_torque_impulse(transform.basis.y * turnSpeed * 8.0)
 
-
 func makeItFloat():
 	submerged = false
 	touchingWater = false
@@ -239,12 +247,10 @@ func makeItFloat():
 	if depth >= 0:
 		touchingWater = true
 
-
 func recoverBoat():
 	var current_up = global_transform.basis.y
 	var correction_axis = current_up.cross(Vector3.UP)
 	apply_torque(correction_axis * recoverSpeed)
-
 
 func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if track == null:
@@ -290,12 +296,10 @@ func update_wrong_way(delta: float, state: PhysicsDirectBodyState3D) -> void:
 	if wave_hud and wave_hud.has_method("set_wrong_way"):
 		wave_hud.call("set_wrong_way", is_wrong)
 
-
 func crazyAssTricks():
 	var local_angular_vel = global_transform.basis.inverse() * angular_velocity
 	var delta = get_physics_process_delta_time()
 	totalSpinsDegrees += local_angular_vel * delta * (180.0 / PI)
-
 
 func checkTrickLanding():
 	# calculate completed spins on each axis
@@ -320,7 +324,6 @@ func checkTrickLanding():
 		if xSpins > 0 or ySpins > 0 or zSpins > 0:
 			print("totally buggered that one")
 		totalSpinsDegrees = Vector3.ZERO
-
 
 func calcPoints(xSpins: int, ySpins: int, zSpins: int):
 	var points := 0
@@ -349,13 +352,11 @@ func calcPoints(xSpins: int, ySpins: int, zSpins: int):
 	print("Points earned: ", points, " | Total score: ", totalScore)
 	scoreLabel.text = "Score: " + str(totalScore)
 
-
 func setInWave() -> void:
 	inWave = true
 	
 func setNotInWave() -> void:
 	inWave = false
-
 
 func handleWaveCollision() -> void:
 	if not inWave:
@@ -371,7 +372,8 @@ func show_ink(duration: float = 3.0) -> void:
 		print("show_ink: ink_overlay is NULL")
 		return
 
-	print("show_ink: showing ink for ", duration, " seconds")
+	#print("show_ink: showing ink for ", duration, " seconds")
+	ink_overlay.modulate.a = 0.7
 	ink_overlay.visible = true
 	ink_overlay.modulate.a = 1.0  
 
@@ -382,7 +384,6 @@ func show_ink(duration: float = 3.0) -> void:
 	add_child(timer)
 	timer.start()
 
-
 func _on_ink_timeout() -> void:
 	fadeInk()
 
@@ -390,7 +391,6 @@ func _on_ink_timeout() -> void:
 		if child is Timer:
 			child.queue_free()
 
-			
 func fadeInk():
 	var tween := get_tree().create_tween()
 	tween.tween_property(ink_overlay, "modulate:a", 0.0, 1.0)
@@ -398,3 +398,20 @@ func fadeInk():
 		ink_overlay.visible = false
 		ink_overlay.modulate.a = 1.0
 	)
+
+func startRun() -> void:
+	isRunning = true
+	runTimeElapsed = 0.0
+
+func updateRunTimeLabel() -> void:
+	var minutes = int(runTimeElapsed) / 60
+	var seconds = int(runTimeElapsed) % 60
+	var milliseconds = int((runTimeElapsed - int(runTimeElapsed)) * 100)
+	
+	runTimeLabel.text = "%02d:%02d:%02d" % [minutes, seconds, milliseconds]
+
+func finishRun() -> void:
+	isRunning = false
+
+func getFinalTime() -> String:
+	return runTimeLabel.text

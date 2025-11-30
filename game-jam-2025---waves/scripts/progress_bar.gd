@@ -15,7 +15,7 @@ var style_fill: StyleBoxFlat
 signal died
 signal damaged(amount: int)
 
-@onready var custom_font: Font = load("res://assets/fonts/BungeeTint-Regular.ttf")
+@onready var custom_font: Font = load("res://assets/fonts/bungeeregular.ttf")
 
 
 func _ready() -> void:
@@ -95,11 +95,11 @@ func _on_invincibility_timeout() -> void:
 
 
 func update_bar_color() -> void:
-	var ratio := float(health) / float(max_health)
+	var bar_ratio := float(health) / float(max_health)
 
-	if ratio > 0.6:
+	if bar_ratio > 0.6:
 		base_color = Color(0.1, 0.8, 0.1, 1) # green
-	elif ratio > 0.3:
+	elif bar_ratio > 0.3:
 		base_color = Color(0.9, 0.8, 0.1, 1) # yellow
 	else:
 		base_color = Color(0.9, 0.1, 0.1, 1) # red

@@ -1,11 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://dceouyuqmjgbn"]
+[gd_scene load_steps=10 format=3 uid="uid://dceouyuqmjgbn"]
 
 [ext_resource type="StyleBox" uid="uid://byfm7iheq1hw0" path="res://ui/hover_button.tres" id="1_1q10k"]
 [ext_resource type="Script" uid="uid://b2towxvssupt8" path="res://ui/pause_menu.gd" id="1_4dg4t"]
 [ext_resource type="StyleBox" uid="uid://cm5n5ulp6yx7l" path="res://ui/pressed_button.tres" id="2_4dg4t"]
+[ext_resource type="FontFile" uid="uid://crw1tk3vldrbl" path="res://assets/fonts/bungeeregular.ttf" id="2_ptdjk"]
 [ext_resource type="StyleBox" uid="uid://c1gu2kfyy8wd1" path="res://ui/normal_button.tres" id="3_ptdjk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bqsny"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fdrbn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1q10k"]
 
@@ -14,55 +17,82 @@
 [node name="PauseMenu" type="Control"]
 process_mode = 2
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4dg4t")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_right = 101.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.8, 0.027451, 0.00392157, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_ptdjk")
+theme_override_font_sizes/font_size = 48
 text = "Paused"
 horizontal_alignment = 1
 
-[node name="Button (Resume)" type="Button" parent="VBoxContainer"]
+[node name="Button (Resume)" type="Button" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2_ptdjk")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_bqsny")
 theme_override_styles/hover = ExtResource("1_1q10k")
 theme_override_styles/pressed = ExtResource("2_4dg4t")
 theme_override_styles/normal = ExtResource("3_ptdjk")
 text = "Resume"
 
-[node name="Button (Restart)" type="Button" parent="VBoxContainer"]
+[node name="Button (Settings)" type="Button" parent="CanvasLayer/VBoxContainer"]
+z_index = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2_ptdjk")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fdrbn")
+theme_override_styles/hover = ExtResource("1_1q10k")
+theme_override_styles/pressed = ExtResource("2_4dg4t")
+theme_override_styles/normal = ExtResource("3_ptdjk")
+text = "Settings
+"
+
+[node name="Button (Restart)" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_ptdjk")
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1q10k")
 theme_override_styles/hover = ExtResource("1_1q10k")
 theme_override_styles/pressed = ExtResource("2_4dg4t")
 theme_override_styles/normal = ExtResource("3_ptdjk")
 text = "Restart"
 
-[node name="Button (Main Menu)" type="Button" parent="VBoxContainer"]
+[node name="Button (Main Menu)" type="Button" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2_ptdjk")
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ptdjk")
 theme_override_styles/hover = ExtResource("1_1q10k")
 theme_override_styles/pressed = ExtResource("2_4dg4t")
 theme_override_styles/normal = ExtResource("3_ptdjk")
 text = "Main Menu"
 
-[connection signal="pressed" from="VBoxContainer/Button (Resume)" to="." method="_on_button_resume_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button (Restart)" to="." method="_on_button_restart_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button (Main Menu)" to="." method="_on_button_main_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button (Resume)" to="." method="_on_button_resume_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button (Settings)" to="." method="_on_button_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button (Restart)" to="." method="_on_button_restart_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button (Main Menu)" to="." method="_on_button_main_menu_pressed"]

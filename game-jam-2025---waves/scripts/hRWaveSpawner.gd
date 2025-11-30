@@ -8,7 +8,7 @@ const hyper_realistic_wave_scene: PackedScene = preload("res://scenes/hyper_real
 @export var spawn_interval: float = 5.0
 @export var spawn_chance: float = .7
 @export var spawn_y_offset: float = -100.0  # make it spawn under the water so we don't see a flicker
-@export var spawn_distance_ahead_min: float = 90.0
+@export var spawn_distance_ahead_min: float = 190.0
 @export var sample_distance: float = 5.0
 @export var player_start_side := Vector3.LEFT  # which direction down the track path the waves will go
 
@@ -27,7 +27,6 @@ func _process(delta: float) -> void:
 		spawn_timer = 0.0
 		
 		if randf() <= spawn_chance:
-			print("we made it steve")
 			spawn_wave()
 			
 func spawn_wave() -> void:
@@ -72,4 +71,4 @@ func spawn_wave() -> void:
 	
 	var move_direction = wave.basis.x * sign(player_start_side.x)
 	wave.set_move_direction(move_direction)
-	print("spawned wave at: ", spawn_pos)
+	#print("spawned wave at: ", spawn_pos)

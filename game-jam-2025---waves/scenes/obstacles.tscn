@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://bexah01ookd2g"]
 
 [ext_resource type="Script" uid="uid://dbpmyggv312yl" path="res://scripts/obstacles.gd" id="1_rw70g"]
-[ext_resource type="ArrayMesh" uid="uid://bxfk1jqwkmsw6" path="res://assets/squid.obj" id="2_2fc1n"]
-[ext_resource type="Texture2D" uid="uid://dhfjqjii7mgh7" path="res://assets/squid.png" id="3_jei10"]
+[ext_resource type="ArrayMesh" uid="uid://bxfk1jqwkmsw6" path="res://assets/objects/squid.obj" id="2_2fc1n"]
+[ext_resource type="Texture2D" uid="uid://dhfjqjii7mgh7" path="res://assets/objects/squid.png" id="3_jei10"]
 [ext_resource type="AudioStream" uid="uid://denm88rdo12gu" path="res://assets/audio/squid_jump_sound.mp3" id="4_2fc1n"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rw70g"]
@@ -32,3 +32,5 @@ shape = SubResource("CapsuleShape3D_rw70g")
 
 [node name="JumpSound" type="AudioStreamPlayer" parent="." groups=["squid"]]
 stream = ExtResource("4_2fc1n")
+volume_db = -4.0
+bus = &"sfx"

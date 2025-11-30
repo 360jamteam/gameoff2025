@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgm7ju7d5l03t"
-path="res://.godot/imported/eel.png-a10f707073bfb9f8477b379b8825d85c.ctex"
+uid="uid://ckt75x7qiay80"
+path="res://.godot/imported/twilight-5-1x - Copy.png-5b2933e823ab14406e5b2f5a4c145406.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/eel.png"
-dest_files=["res://.godot/imported/eel.png-a10f707073bfb9f8477b379b8825d85c.ctex"]
+source_file="res://assets/for_shader/twilight-5-1x - Copy.png"
+dest_files=["res://.godot/imported/twilight-5-1x - Copy.png-5b2933e823ab14406e5b2f5a4c145406.ctex"]
 
 [params]
 

@@ -1,18 +1,24 @@
 extends Path3D
 
 @export var buoy_scene: PackedScene = preload("res://scenes/buoy.tscn")
-@export var buoy_spacing: float = 70.0
-@export var buoy_offset_from_wall: float = 20.0
-@export var track_width: float = 300.0
-@export var wall_height: float = 400.0
-@export var water_path: NodePath = "../WaterMesh"
-@export var num_points_in_wall = 200 # more points = smoother curves
 @export var squid_scene: PackedScene = preload("res://scenes/obstacles.tscn")
 @export var meat_scene: PackedScene = preload("res://scenes/healthfood.tscn")
+@export var finish_line_scene: PackedScene = preload("res://scenes/finish_line.tscn")
 
-@export var squid_spacing: float = 120.0     # distance between squids
-@export var health_item_spacing: float = 240.0       # distance along track between spawn checks
-@export var health_item_chance: float = 0.3 
+@export var buoy_spacing: float = 100.0
+@export var buoy_offset_from_wall: float = 20.0
+
+@export var track_width: float = 300.0
+@export var wall_height: float = 700.0
+@export var water_path: NodePath = "../WaterMesh"
+@export var num_points_in_wall = 200 # more points = smoother curves
+
+@export var invisible_ceiling_height := 670.0
+
+@export var squid_spacing: float = 360.0     # distance between squids
+@export var health_item_spacing: float = 480.0       # distance along track between spawn checks
+@export var health_item_chance: float = 0.5 
+
 var water: MeshInstance3D
 var rng := RandomNumberGenerator.new()
 
@@ -30,6 +36,7 @@ func _ready():
 	create_invisible_walls()
 	spawn_squids()
 	spawn_health_items()
+	spawn_finish_line()
 	
 var boat := get_node_or_null("../Boat")
 
@@ -62,6 +69,23 @@ func spawn_buoy_at_offset(along_path: float, perpendicular_offset: float):
 func create_invisible_walls():
 	create_wall_side_mesh(-track_width / 2.0, "LeftWall")
 	create_wall_side_mesh(track_width / 2.0, "RightWall")
+	create_ceiling()
+	
+func create_ceiling() -> void:
+	var ceiling = StaticBody3D.new()
+	ceiling.name = "ceiling"
+	add_child(ceiling)
+	
+	var collision_shape = CollisionShape3D.new()
+	ceiling.add_child(collision_shape)
+	
+	var boundary_shape = WorldBoundaryShape3D.new()
+	collision_shape.shape = boundary_shape
+	
+	boundary_shape.plane = Plane(Vector3.DOWN, 0)
+	
+	ceiling.position.y = invisible_ceiling_height
+	
 	
 func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	var wall = StaticBody3D.new()
@@ -111,9 +135,9 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 			next_pos += next_right * perpendicular_offset
 			
 			# create quad (two triangles)
-			var bottom1 = pos - Vector3.UP * wall_height
+			var bottom1 = pos - Vector3.UP * 10
 			var top1 = pos + Vector3.UP * wall_height
-			var bottom2 = next_pos - Vector3.UP * wall_height
+			var bottom2 = next_pos - Vector3.UP * 10
 			var top2 = next_pos + Vector3.UP * wall_height
 			
 			# first triangle
@@ -158,9 +182,15 @@ func spawn_squids() -> void:
 
 	var half_width: float = track_width * 0.5
 	var num_squids: int = int(curve_length / squid_spacing)
+	
+	var squid_free_zone := 400.0
 
 	for i in range(num_squids):
 		var dist: float = float(i) * squid_spacing
+		
+		if dist < squid_free_zone:
+			continue
+		
 		if dist > curve_length:
 			break
 
@@ -204,15 +234,16 @@ func setup_squid_collision(squid: Node3D) -> void:
 		# Add to squid group for easy detection
 		squid.add_to_group("squid")
 		
-		print("Squid collision setup - Layer: ", squid.collision_layer, " Mask: ", squid.collision_mask)
+		#print("Squid collision setup - Layer: ", squid.collision_layer, " Mask: ", squid.collision_mask)
 		
 		# Ensure collision shape exists and is enabled
 		var collision_shape = squid.get_node_or_null("CollisionShape3D")
 		if collision_shape:
 			collision_shape.disabled = false
-			print("Squid collision shape found and enabled")
+			#print("Squid collision shape found and enabled")
 		else:
 			print("WARNING: Squid has no CollisionShape3D")
+			
 func spawn_health_items() -> void:
 	var curve_length = curve.get_baked_length()
 	if curve_length <= 0.0:
@@ -270,11 +301,38 @@ func check_squid_collisions() -> void:
 			
 			# If very close, trigger collision
 			if distance < 15.0:
-				print("Manual collision detected with squid at distance: ", distance)
+				#print("Manual collision detected with squid at distance: ", distance)
 						
 				if boat.has_method("show_ink"):
 					boat.show_ink(3.0)
 				break
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	check_squid_collisions()
+	
+func spawn_finish_line() -> void:
+	var finish_line = finish_line_scene.instantiate()
+	add_child(finish_line)
+	
+	# using same logic as in hRWaveSpawner.gd to make 
+	# the finish line rotate to face the incoming track
+
+	# close to start for testing
+	# var end_of_track_a = to_global(curve.get_baked_points().get(1998))
+	# var end_of_track_b = to_global(curve.get_baked_points().get(2000))
+
+	# actual end of track
+	var track_points = curve.get_baked_points()
+	track_points.reverse()
+	var end_of_track_a = to_global(track_points.get(100))
+	var end_of_track_b = to_global(track_points.get(102))
+
+	var finish_line_direction = (end_of_track_b - end_of_track_a).normalized()
+	
+	var finish_line_basis = Basis()
+	finish_line_basis.z = -finish_line_direction
+	finish_line_basis.y = Vector3.UP
+	finish_line_basis.x = finish_line_basis.y.cross(finish_line_basis.z).normalized()
+	
+	finish_line.global_position = end_of_track_b
+	finish_line.global_transform.basis = finish_line_basis
