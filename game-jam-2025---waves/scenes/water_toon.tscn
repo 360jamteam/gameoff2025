@@ -1,14 +1,15 @@
-[gd_scene load_steps=26 format=3 uid="uid://djlg762jdm4m4"]
+[gd_scene load_steps=27 format=3 uid="uid://ukq46i7ks5h6"]
 
-[ext_resource type="Script" uid="uid://bstm164sj8s8b" path="res://scripts/cameraController.gd" id="1_8gqqs"]
+[ext_resource type="Script" path="res://scripts/cameraController.gd" id="1_8gqqs"]
 [ext_resource type="Shader" uid="uid://ifixuble2tfy" path="res://shaders/water.gdshader" id="2_p1kvb"]
 [ext_resource type="Script" uid="uid://6jg2wnsqwbki" path="res://scripts/water.gd" id="2_vcdfo"]
 [ext_resource type="Script" path="res://scripts/buoySpawner.gd" id="3_p1kvb"]
 [ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="4_mste4"]
 [ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/ship-small.obj" id="5_ywv5c"]
 [ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="6_wyvur"]
-[ext_resource type="PackedScene" uid="uid://bet5mpv4rsivg" path="res://scenes/row_wave_spawner.tscn" id="8_mste4"]
+[ext_resource type="PackedScene" uid="uid://pykyri3xk86b" path="res://scenes/WaveSpawner.tscn" id="9_wyvur"]
 [ext_resource type="PackedScene" uid="uid://bexah01ookd2g" path="res://scenes/obstacles.tscn" id="9_ywv5c"]
+[ext_resource type="PackedScene" uid="uid://b4kgaodv5d4a8" path="res://scenes/WaveRipple.tscn" id="11_wyvur"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aitcd"]
 noise_type = 3
@@ -40,14 +41,14 @@ shader_parameter/FOAM_COL = Vector4(0.8125, 0.9609, 0.9648, 1)
 shader_parameter/distortion_speed = 2.0
 shader_parameter/tile = Vector2(50, 50)
 shader_parameter/height = 2.0
-shader_parameter/wave_size = Vector2(2, 2)
+shader_parameter/wave_size = Vector2(4, 4)
 shader_parameter/wave_speed = 4.5
 shader_parameter/spawned_wave_count = 0
 shader_parameter/spawned_wave_centers = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/spawned_wave_times = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-shader_parameter/spawned_wave_radius = 10.0
-shader_parameter/spawned_wave_height = 5.0
-shader_parameter/spawned_wave_lifetime = 5.0
+shader_parameter/spawned_wave_radius = 8.0
+shader_parameter/spawned_wave_height = 4.0
+shader_parameter/spawned_wave_lifetime = 6.0
 shader_parameter/water_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nnm43"]
@@ -129,8 +130,8 @@ script = ExtResource("1_8gqqs")
 mesh = SubResource("PlaneMesh_nnm43")
 skeleton = NodePath("../..")
 script = ExtResource("2_vcdfo")
-spawned_wave_radius = 10.0
-spawned_wave_height = 10.0
+spawned_wave_radius = 18.0
+spawned_wave_height = 1.5
 
 [node name="TrackPath" type="Path3D" parent="Water"]
 curve = SubResource("Curve3D_n74q2")
@@ -144,6 +145,8 @@ linear_damp = 0.02
 angular_damp = 2.0
 script = ExtResource("4_mste4")
 water_angular_drag = 0.2
+debug_hud_path = NodePath("../Water/TrackPath")
+debug_ripple_scene = ExtResource("11_wyvur")
 turnSpeed = 0.02
 recoverSpeed = 5.0
 
@@ -167,9 +170,16 @@ trail_lifetime = 1.78
 process_material = SubResource("ParticleProcessMaterial_as4el")
 draw_pass_1 = SubResource("QuadMesh_k80b6")
 
-[node name="WaveSpawner" parent="Boat" instance=ExtResource("8_mste4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -514.228, -7.68, 3098.46)
+[node name="WaveSpawner" parent="Boat" instance=ExtResource("9_wyvur")]
 boat = NodePath("..")
 water = NodePath("../../Water/WaterMesh")
+ripple_scene = ExtResource("11_wyvur")
+row_interval = 1.5
+
+[node name="WaveRipple" parent="Boat" instance=ExtResource("11_wyvur")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -514.228, -7.68, 3098.46)
+visible = false
 
 [node name="Obstacles" parent="." instance=ExtResource("9_ywv5c")]
+
+[editable path="Boat/WaveRipple"]

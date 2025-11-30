@@ -24,12 +24,34 @@ var spawned_waves: Array = []  # each = { center = Vector2, time = float }
 
 
 func _ready():
-	material = mesh.surface_get_material(0)
+	# Try override material first
+	material = get_surface_override_material(0)
+	if material == null:
+		# Fallback to the mesh's own material
+		material = mesh.surface_get_material(0)
+
+	if material == null:
+		push_warning("Water.gd: No material found on surface 0!")
+		return
+
 	wave_size = material.get_shader_parameter("wave_size")
 	wave_speed = material.get_shader_parameter("wave_speed")
 	height = material.get_shader_parameter("height")
+	print("Water.gd: using material:", material)
+
+	# TEST: force a few waves in the middle of the mesh
+	var aabb = mesh.get_aabb()
+	var center_world = global_position
+	center_world.x += 0.0
+	center_world.z += 0.0
+
+	for i in range(3):
+		add_wave_at_world_position(center_world + Vector3(i * 5.0, 0.0, 0.0))
 
 func _process(delta):
+	if material == null:
+		return
+		
 	# keep this in sync with shader
 	time += delta
 
@@ -38,9 +60,6 @@ func _process(delta):
 		func(w):
 			return time - float(w["time"]) <= spawned_wave_lifetime
 	)
-
-	if material == null:
-		return
 
 	var count: int = min(spawned_waves.size(), MAX_SPAWNED_WAVES)
 
