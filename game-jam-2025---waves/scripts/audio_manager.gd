@@ -10,19 +10,19 @@ func _ready() -> void:
 	menu_music_player = AudioStreamPlayer.new()
 	menu_music_player.bus = "music"
 	menu_music_player.stream = preload("res://assets/audio/background_music.ogg")
-	menu_music_player.volume_db = 0
+	menu_music_player.volume_db = 10
 	add_child(menu_music_player)
 	
 	game_music_player = AudioStreamPlayer.new()
 	game_music_player.bus = "music"
 	game_music_player.stream = preload("res://assets/audio/blossom_mountain_bpm140.ogg")
-	game_music_player.volume_db = -10
+	game_music_player.volume_db = -8
 	add_child(game_music_player)
 	
 	game_ambient_player = AudioStreamPlayer.new()
 	game_ambient_player.bus = "ambient"
 	game_ambient_player.stream = preload("res://assets/audio/wave_loop.ogg")
-	#game_ambient_player.volume_db = 10
+	game_ambient_player.volume_db = -1
 	add_child(game_ambient_player)
 
 func play_menu_music():

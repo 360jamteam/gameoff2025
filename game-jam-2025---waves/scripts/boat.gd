@@ -132,8 +132,8 @@ func _on_body_entered(body: Node3D) -> void:
 		if is_instance_valid(body):
 			body.queue_free()
 	if collision_sound:
-		collision_sound.stop()
-		collision_sound.play()
+		#collision_sound.stop()
+		#collision_sound.play()
 		
 		# soften the hit so the boat doesn't spin forever
 		angular_velocity = Vector3.ZERO
@@ -145,11 +145,10 @@ func _on_body_entered(body: Node3D) -> void:
 		# small damage 
 		#if health_bar:
 			#health_bar.apply_damage(10)
-	else:
-		pass
+	#else:
 		# other collisions can still do normal damage if you want
-		if health_bar:
-			health_bar.apply_damage(20)
+		#if health_bar:
+			#health_bar.apply_damage(20)
 	
 func _process(delta: float) -> void:
 	if isRunning:

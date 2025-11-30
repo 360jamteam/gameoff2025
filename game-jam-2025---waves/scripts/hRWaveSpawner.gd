@@ -71,4 +71,4 @@ func spawn_wave() -> void:
 	
 	var move_direction = wave.basis.x * sign(player_start_side.x)
 	wave.set_move_direction(move_direction)
-	print("spawned wave at: ", spawn_pos)
+	#print("spawned wave at: ", spawn_pos)

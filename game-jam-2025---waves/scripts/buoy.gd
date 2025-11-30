@@ -1,4 +1,4 @@
-extends StaticBody3D
+extends Node3D
 
 var water: MeshInstance3D  
 

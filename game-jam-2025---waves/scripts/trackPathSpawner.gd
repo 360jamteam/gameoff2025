@@ -9,11 +9,13 @@ extends Path3D
 @export var buoy_offset_from_wall: float = 20.0
 
 @export var track_width: float = 300.0
-@export var wall_height: float = 400.0
+@export var wall_height: float = 700.0
 @export var water_path: NodePath = "../WaterMesh"
 @export var num_points_in_wall = 200 # more points = smoother curves
 
-@export var squid_spacing: float = 240.0     # distance between squids
+@export var invisible_ceiling_height := 670.0
+
+@export var squid_spacing: float = 360.0     # distance between squids
 @export var health_item_spacing: float = 480.0       # distance along track between spawn checks
 @export var health_item_chance: float = 0.5 
 
@@ -67,6 +69,23 @@ func spawn_buoy_at_offset(along_path: float, perpendicular_offset: float):
 func create_invisible_walls():
 	create_wall_side_mesh(-track_width / 2.0, "LeftWall")
 	create_wall_side_mesh(track_width / 2.0, "RightWall")
+	create_ceiling()
+	
+func create_ceiling() -> void:
+	var ceiling = StaticBody3D.new()
+	ceiling.name = "ceiling"
+	add_child(ceiling)
+	
+	var collision_shape = CollisionShape3D.new()
+	ceiling.add_child(collision_shape)
+	
+	var boundary_shape = WorldBoundaryShape3D.new()
+	collision_shape.shape = boundary_shape
+	
+	boundary_shape.plane = Plane(Vector3.DOWN, 0)
+	
+	ceiling.position.y = invisible_ceiling_height
+	
 	
 func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 	var wall = StaticBody3D.new()
@@ -116,9 +135,9 @@ func create_wall_side_mesh(perpendicular_offset: float, wall_name: String):
 			next_pos += next_right * perpendicular_offset
 			
 			# create quad (two triangles)
-			var bottom1 = pos - Vector3.UP * wall_height
+			var bottom1 = pos - Vector3.UP * 10
 			var top1 = pos + Vector3.UP * wall_height
-			var bottom2 = next_pos - Vector3.UP * wall_height
+			var bottom2 = next_pos - Vector3.UP * 10
 			var top2 = next_pos + Vector3.UP * wall_height
 			
 			# first triangle
@@ -163,9 +182,15 @@ func spawn_squids() -> void:
 
 	var half_width: float = track_width * 0.5
 	var num_squids: int = int(curve_length / squid_spacing)
+	
+	var squid_free_zone := 400.0
 
 	for i in range(num_squids):
 		var dist: float = float(i) * squid_spacing
+		
+		if dist < squid_free_zone:
+			continue
+		
 		if dist > curve_length:
 			break
 
@@ -299,8 +324,8 @@ func spawn_finish_line() -> void:
 	# actual end of track
 	var track_points = curve.get_baked_points()
 	track_points.reverse()
-	var end_of_track_a = to_global(track_points.get(0))
-	var end_of_track_b = to_global(track_points.get(2))
+	var end_of_track_a = to_global(track_points.get(100))
+	var end_of_track_b = to_global(track_points.get(102))
 
 	var finish_line_direction = (end_of_track_b - end_of_track_a).normalized()
 	

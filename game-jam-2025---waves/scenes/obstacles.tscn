@@ -32,3 +32,5 @@ shape = SubResource("CapsuleShape3D_rw70g")
 
 [node name="JumpSound" type="AudioStreamPlayer" parent="." groups=["squid"]]
 stream = ExtResource("4_2fc1n")
+volume_db = -4.0
+bus = &"sfx"

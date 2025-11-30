@@ -6,14 +6,16 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jh885"]
 albedo_texture = ExtResource("2_7ie22")
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_omtcd"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_2i0pg"]
+radius = 9.027
 
 [node name="HealthFood" type="StaticBody3D" groups=["health_pickup"]]
 
 [node name="meat" type="MeshInstance3D" parent="." groups=["health_pickup"]]
-transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 mesh = ExtResource("1_2i0pg")
 surface_material_override/0 = SubResource("StandardMaterial3D_jh885")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["health_pickup"]]
-shape = SubResource("CapsuleShape3D_omtcd")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.01825, 0)
+shape = SubResource("SphereShape3D_2i0pg")

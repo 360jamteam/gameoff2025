@@ -1,0 +1,98 @@
+[gd_scene load_steps=14 format=3 uid="uid://b2q3vah4675wn"]
+
+[ext_resource type="Script" uid="uid://dusldkn1cseda" path="res://scripts/boat.gd" id="1_fsggc"]
+[ext_resource type="ArrayMesh" uid="uid://b8i5xc55nf84m" path="res://assets/objects/ship-small.obj" id="2_bt8vh"]
+[ext_resource type="Texture2D" uid="uid://sjaox4vlitg" path="res://assets/foam.png" id="3_wo52m"]
+[ext_resource type="AudioStream" uid="uid://crdv8tsu4uqd" path="res://assets/audio/collision_sound.mp3" id="4_m2jbu"]
+[ext_resource type="AudioStream" uid="uid://b8k00ihk1lecu" path="res://assets/audio/healing.mp3" id="5_6ld5q"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8gqqs"]
+radius = 3.5
+height = 7.0
+
+[sub_resource type="Gradient" id="Gradient_3bo0k"]
+offsets = PackedFloat32Array(0, 0.995763, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.886, 0.886, 0.886, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_as4el"]
+gradient = SubResource("Gradient_3bo0k")
+
+[sub_resource type="Curve" id="Curve_3bo0k"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.36313, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_as4el"]
+curve = SubResource("Curve_3bo0k")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_as4el"]
+emission_shape_scale = Vector3(0.7, 0.7, 0.7)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 3)
+direction = Vector3(0, 0, 1)
+gravity = Vector3(0, 0, 1)
+scale_curve = SubResource("CurveTexture_as4el")
+color_ramp = SubResource("GradientTexture1D_as4el")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n74q2"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_wo52m")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+proximity_fade_enabled = true
+proximity_fade_distance = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_k80b6"]
+material = SubResource("StandardMaterial3D_n74q2")
+
+[node name="Boat" type="RigidBody3D"]
+transform = Transform3D(0.99931, 0, 0.0371322, 0, 1, 0, -0.0371322, 0, 0.99931, 0, 0, 0)
+mass = 10.0
+inertia = Vector3(1, 1, 1)
+linear_damp = 0.02
+angular_damp = 2.0
+script = ExtResource("1_fsggc")
+track_path = NodePath("../Water/TrackPath")
+wave_hud_path = NodePath("../WaveHUD")
+
+[node name="ShipMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+mesh = ExtResource("2_bt8vh")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.062686, -0.998033, 0, 0.998033, -0.062686, 0, 2.32371, 0)
+shape = SubResource("CapsuleShape3D_8gqqs")
+debug_color = Color(0.858207, 0.320176, 0.45822, 0.42)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02586, -3.48218)
+amount = 50
+speed_scale = 2.6
+randomness = 0.86
+trail_enabled = true
+trail_lifetime = 1.78
+process_material = SubResource("ParticleProcessMaterial_as4el")
+draw_pass_1 = SubResource("QuadMesh_k80b6")
+
+[node name="CollisionSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_m2jbu")
+volume_db = -7.0
+bus = &"sfx"
+
+[node name="HealthSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("5_6ld5q")
+bus = &"sfx"
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.997403, 0.0173621, 0.0699071, -0.0173621, -0.883954, 0.467252, 0.0699071, -0.467253, -0.881356, 1.37386, 10.3849, -16.9737)
+light_energy = 5.0
+shadow_enabled = true
+spot_range = 44.9624
