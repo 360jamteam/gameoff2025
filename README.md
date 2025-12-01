@@ -7,6 +7,7 @@
 - William Craske
 - Aniket Sandhu
 - Sho Okano
+- Ayush Jain
 
 #### Environment & obstacles
 - Sho Okano
@@ -20,6 +21,7 @@
 - William Craske
 - Aniket Sandhu
 - Sho Okano
+- Ayush Jain
 
 #### Devlogs
 - Sho, [Initial water & track development (wiki page)](https://github.com/360jamteam/gameoff2025/wiki/Initial-water-&-track-development-%E2%80%90-Sho)
